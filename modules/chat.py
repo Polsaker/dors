@@ -34,6 +34,10 @@ def chat(irc, event):
 
     if not text:
         return
+    
+    if config.nick in text.split(" ")[0]:
+        text = " ".join(text.split(" ")[1:])
+    
     channel = event.target
 
     for x in nowords:
