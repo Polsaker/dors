@@ -20,7 +20,7 @@ noun = ['ZHVjaw==', 'Y2F0', 'ZG9n', 'aHVtYW4=',]
 
 random.seed()
 
-@stuffHandler("(?i)(" + config.nick + "[:,]?\s)?(.*)")
+@stuffHandler("(?i)" + config.nick + "[:,]?(.*)")
 def chat(irc, event):
     text = event.message
 
