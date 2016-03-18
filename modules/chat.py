@@ -128,17 +128,17 @@ def chat(irc, event):
             irc.message(event.target, msg)
 
     if random.random() <= 0.05:
-        chat(jenni, input)
+        chat(irc, event)
 
 @stuffHandler(".+")
-def random_chat(jenni, input):
+def random_chat(jenni, event):
     bad_chans =  fchannels()
-    if bad_chans and (input.sender).lower() in bad_chans:
+    if bad_chans and (event.target).lower() in bad_chans:
         return
 
     if random.random() <= (1 / 2500.0):
-        old_input = input
-        chat(jenni, old_input)
+        old_input = event
+        chat(jenni, event)
 
 
 def e(m):
