@@ -28,10 +28,10 @@ class Event(object):
 class Jenni(Waifu):
     def __init__(self, nick, *args, **kwargs):
         super().__init__(nick, *args, **kwargs)
-        
+                
         self.stuffHandlers = []
         self.startupHooks = []
-        self.commandHandlers = {}
+        self.commandHooks = []
         
         for module in os.listdir(os.path.dirname("modules/")):
             if module == '__init__.py' or module[-3:] != '.py':
@@ -52,10 +52,28 @@ class Jenni(Waifu):
                     self.stuffHandlers.append({'regex': func._regex, 'func': func, 'module': module[:-3]})
                 elif func._handler == 2: # startup
                     self.startupHooks.append({'func': func, 'module': module[:-3]})
-
+                elif func._handler == 3: # command
+                    self.commandHooks.append({'commands': func._commands, 'help': func._help, 'func': func, 'module': module[:-3]})
+                    
     @pydle.coroutine
     def on_message(self, target, source, message):
         event = Event(source, target, message)
+        # Commands
+        if message.strip().startswith(config.prefix):
+            command = message.strip().split()[0].replace(config.prefix, '', 1)
+            args = message.strip().split()[1:]
+            
+            pot = next((item for item in self.commandHooks if command in item['commands']))
+
+            if pot:
+                try:
+                    pot['func'](self, event)
+                except Exception as e:
+                    tb = repr(e) + traceback.format_exc().splitlines()[-3]
+                    self.message(target, "Error in {0} module: {1}".format(stuff['module'], tb))
+
+
+        # Hooks
         # Iterate over all the stuff handlers.
         for stuff in self.stuffHandlers:
             # try to find a match
@@ -89,15 +107,25 @@ if __name__ == '__main__':
     client.handle_forever()
 
 # Decorators and other shit
-def stuffHandler(regex):
+def stuffHook(regex):
     def wrap(func):
-        func._handler = 1 # Handler type 1: Stuff handler.
+        func._handler = 1 # 1: Stuff handler.
         func._regex = re.compile(regex)
+        return func
+    return wrap
+
+def commandHook(commands, help=""):
+    if type(commands) == str:
+        commands = [commands]
+    def wrap(func):
+        func._handler = 3 # 3: Command.
+        func._commands = commands
+        func._help = help
         return func
     return wrap
     
 def startupHook():
     def wrap(func):
-        func._handler = 2 # Handler type 1: Startup (function called when bot connects).
+        func._handler = 2 # 2: function called when bot connects.
         return func
     return wrap

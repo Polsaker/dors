@@ -1,4 +1,4 @@
-from jenni import stuffHandler
+from jenni import stuffHook
 import config
 
 import cleverbot
@@ -20,7 +20,7 @@ noun = ['ZHVjaw==', 'Y2F0', 'ZG9n', 'aHVtYW4=',]
 
 random.seed()
 
-@stuffHandler("(?i)" + config.nick + "[:,]?(.*)")
+@stuffHook("(?i)" + config.nick + "[:,]?(.*)")
 def chat(irc, event):
     text = event.message
 
@@ -130,7 +130,7 @@ def chat(irc, event):
     if random.random() <= 0.05:
         chat(irc, event)
 
-@stuffHandler(".+")
+@stuffHook(".+")
 def random_chat(jenni, event):
     bad_chans =  fchannels()
     if bad_chans and (event.target).lower() in bad_chans:
