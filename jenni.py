@@ -6,6 +6,7 @@ import os
 import importlib
 import re
 import traceback
+import threading
 
 Waifu = pydle.featurize(pydle.features.RFC1459Support, pydle.features.WHOXSupport,
                              pydle.features.ISUPPORTSupport,
@@ -29,6 +30,7 @@ class Jenni(Waifu):
         super().__init__(nick, *args, **kwargs)
         
         self.stuffHandlers = []
+        self.startupHooks = []
         self.commandHandlers = {}
         
         for module in os.listdir(os.path.dirname("modules/")):
@@ -48,6 +50,8 @@ class Jenni(Waifu):
                     continue # nothing to do here.
                 if func._handler == 1: # Stuff handler.
                     self.stuffHandlers.append({'regex': func._regex, 'func': func, 'module': module[:-3]})
+                elif func._handler == 2: # startup
+                    self.startupHooks.append({'func': func, 'module': module[:-3]})
 
     @pydle.coroutine
     def on_message(self, target, source, message):
@@ -57,16 +61,26 @@ class Jenni(Waifu):
             # try to find a match
             if stuff['regex'].match(message):
                 # Got a match. Call the function
-                # TODO: thread this?
                 try:
                     stuff['func'](self, event)
                 except Exception as e:
                     tb = repr(e) + traceback.format_exc().splitlines()[-3]
                     self.message(target, "Error in {0} module: {1}".format(stuff['module'], tb))
+
     def on_connect(self):
         super().on_connect()
         for channel in config.channels:
             self.join(channel)
+        
+        for hook in self.startupHooks:
+            try:
+                t = threading.Thread(target=hook['func'], args=(self,))
+                t.daemon=True
+                t.start()
+            except Exception as e:
+                tb = repr(e) + traceback.format_exc().splitlines()[-3]
+                print("Error in {0} module: {1}".format(stuff['module'], tb))
+
 
 if __name__ == '__main__':
     client = Jenni(config.nick, sasl_username=config.user, sasl_password=config.password)
@@ -82,3 +96,8 @@ def stuffHandler(regex):
         return func
     return wrap
     
+def startupHook():
+    def wrap(func):
+        func._handler = 2 # Handler type 1: Startup (function called when bot connects).
+        return func
+    return wrap
