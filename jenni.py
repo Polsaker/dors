@@ -25,7 +25,7 @@ class Event(object):
         self.replyto = source if self.pm else target
         
         self.command = message.split(" ")[0][1:] if message[0] == "." else None
-        self.args = message.split(" ")[1:]
+        self.args = message.split(" ").strip()[1:]
 
 
 class Jenni(Waifu):
