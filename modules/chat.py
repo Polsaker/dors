@@ -17,7 +17,7 @@ nowords = ['reload', 'help', 'tell', 'ask', 'ping']
 r_entity = re.compile(r'&[A-Za-z0-9#]+;')
 HTML_ENTITIES = { 'apos': "'" }
 noun = ['ZHVjaw==', 'Y2F0', 'ZG9n', 'aHVtYW4=',]
-
+r_entity = re.compile(r'\|[0-9A-F#]{,4}')
 random.seed()
 
 @stuffHook("(?i)" + config.nick + "[:,]?\s*(.*)")
@@ -98,6 +98,9 @@ def chat(irc, event):
         def switcharoo(txt):
             temp = random.randint(1, len(txt) - 2)
             return txt[:temp] + txt[temp + 1] + txt[temp] + txt[temp + 2:]
+        
+        def fixaroo(txt):
+            return chr(int(txt[1:], 16))
 
         if random.random() <= 0.25:
             l_response = len(response) // 20
@@ -112,7 +115,7 @@ def chat(irc, event):
         if random.random() <= 0.05:
             response = response.upper()
 
-
+        response = r_entity.sub(e, response)
         if pm:
             if random.random() <= 0.04:
                 return
