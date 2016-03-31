@@ -67,7 +67,10 @@ class Jenni(Waifu):
             command = message.strip().split()[0].replace(config.prefix, '', 1)
             args = message.strip().split()[1:]
             
-            pot = next((item for item in self.commandHooks if command in item['commands']))
+            try:
+                pot = next((item for item in self.commandHooks if command in item['commands']))
+            except StopIteration:
+                pot = False
 
             if pot:
                 try:
