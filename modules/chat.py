@@ -20,9 +20,10 @@ noun = ['ZHVjaw==', 'Y2F0', 'ZG9n', 'aHVtYW4=',]
 
 random.seed()
 
-@stuffHook("(?i)" + config.nick + "[:,]?(.*)")
+@stuffHook("(?i)" + config.nick + "[:,]?\s*(.*)")
 def chat(irc, event):
-    text = event.message
+    text = event.match.group(1)
+    print(text)
 
     if len(text) > 1:
         if text.startswith('\x03') or text.startswith('\x01'):

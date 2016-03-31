@@ -85,6 +85,7 @@ class Jenni(Waifu):
         for stuff in self.stuffHandlers:
             # try to find a match
             if stuff['regex'].match(message):
+                event.match = stuff['regex'].match(message)
                 # Got a match. Call the function
                 try:
                     stuff['func'](self, event)
