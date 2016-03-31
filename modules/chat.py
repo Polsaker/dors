@@ -23,7 +23,6 @@ random.seed()
 @stuffHook("(?i)" + config.nick + "[:,]?\s*(.*)")
 def chat(irc, event):
     text = event.match.group(1)
-    print(text)
 
     if len(text) > 1:
         if text.startswith('\x03') or text.startswith('\x01'):
