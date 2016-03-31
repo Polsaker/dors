@@ -21,6 +21,9 @@ class Event(object):
         self.target = target
         self.message = message
         
+        self.pm = False if target.startswith('#') else True
+        self.replyto = source if self.pm else target
+        
         self.command = message.split(" ")[0][1:] if message[0] == "." else None
         self.args = message.split(" ")[1:]
 
@@ -70,7 +73,7 @@ class Jenni(Waifu):
                     pot['func'](self, event)
                 except Exception as e:
                     tb = repr(e) + traceback.format_exc().splitlines()[-3]
-                    self.message(target, "Error in {0} module: {1}".format(stuff['module'], tb))
+                    self.message(target, "Error in {0} module: {1}".format(pot['module'], tb))
 
 
         # Hooks
@@ -97,7 +100,7 @@ class Jenni(Waifu):
                 t.start()
             except Exception as e:
                 tb = repr(e) + traceback.format_exc().splitlines()[-3]
-                print("Error in {0} module: {1}".format(stuff['module'], tb))
+                print("Error in {0} module: {1}".format(hook['module'], tb))
 
 
 if __name__ == '__main__':
