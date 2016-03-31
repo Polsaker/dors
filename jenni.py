@@ -7,6 +7,7 @@ import importlib
 import re
 import traceback
 import threading
+import copy
 
 Waifu = pydle.featurize(pydle.features.RFC1459Support, pydle.features.WHOXSupport,
                              pydle.features.ISUPPORTSupport,
@@ -25,7 +26,7 @@ class Event(object):
         self.replyto = source if self.pm else target
         
         self.command = message.split(" ")[0][1:] if message[0] == "." else None
-        self.args = message.split(" ").strip()[1:]
+        self.args = list(filter(None, message.split(" ")[1:]))
 
 
 class Jenni(Waifu):
@@ -88,6 +89,24 @@ class Jenni(Waifu):
                     tb = repr(e) + traceback.format_exc().splitlines()[-3]
                     self.message(target, "Error in {0} module: {1}".format(stuff['module'], tb))
 
+    # Remove this if pydle is fixed
+    def _rename_user(self, user, new):
+        if user in self.users:
+            self.users[new] = copy.copy(self.users[user])
+            self.users[new]['nickname'] = new
+            del self.users[user]
+        else:
+            self._create_user(new)
+            if new not in self.users:
+                return
+
+        for ch in self.channels.values():
+            # Rename user in channel list.
+            if user in ch['users']:
+                ch['users'].discard(user)
+                ch['users'].add(new)
+
+
     def on_connect(self):
         super().on_connect()
         for channel in config.channels:
@@ -102,7 +121,11 @@ class Jenni(Waifu):
                 tb = repr(e) + traceback.format_exc().splitlines()[-3]
                 print("Error in {0} module: {1}".format(hook['module'], tb))
 
-
+    def isadmin(self, user):
+        if self.users[user]['account'] not in config.admins:
+            return False
+        return True
+    
 if __name__ == '__main__':
     client = Jenni(config.nick, sasl_username=config.user, sasl_password=config.password)
 

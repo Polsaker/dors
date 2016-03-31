@@ -17,6 +17,10 @@ def checkdb(c):
 
 @commandHook('rss-admin', help="Manages RSS feeds. Usage: .rss-admin add #channel Name url; .rss-admin del #channel [name]")
 def rssadmin(irc, event):
+    if not irc.isadmin(event.source):
+        irc.message(event.replyto, "Not authorized")
+        return
+    
     if not event.args:
         irc.message(event.replyto, "{0}: {1}".format(event.source, rssadmin._help))
         irc.message(event.replyto, "{0}: No parameters specified".format(event.source))
