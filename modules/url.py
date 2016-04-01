@@ -6,6 +6,7 @@ import time
 
 url_finder = re.compile('(?iu)(\!?(http|https|ftp)(://\S+\.?\S+/?\S+?))')
 r_entity = re.compile(r'&[A-Za-z0-9#]+;')
+HTML_ENTITIES = { 'apos': "'" }
 
 
 def get_page_backup(url):
