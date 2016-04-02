@@ -116,19 +116,19 @@ def check_rss(irc):
             if len(crfa) < 1: # First run, dump only last entry.
                 announce_rss(irc, feed_channel, feed_site_name, entry)
             else: # Not the first entry, find all the entries posted since then and announce em'
-                lastposted_url = crfa[0][3]
+                lastposted = []
+                for c in crfa:
+                    lastposted.append(c[3])
                 to_post = []
                 for i in fp.entries:
-                    if i.link != lastposted_url:
+                    if i.link in lastposted:
                         to_post.append(i)
-                    else:
-                        break
                 to_post.reverse()
                 for i in to_post:
                     announce_rss(irc, feed_channel, feed_site_name, i)
             
-            cursor_recent.execute("DELETE FROM recent WHERE channel = ? and site_name = ?", sql_text)
-            conn_recent.commit()
+            #cursor_recent.execute("DELETE FROM recent WHERE channel = ? and site_name = ?", sql_text)
+            #conn_recent.commit()
 
             t = (feed_channel, feed_site_name, entry.title, article_url,)
             cursor_recent.execute("INSERT INTO recent VALUES (?, ?, ?, ?)", t)
