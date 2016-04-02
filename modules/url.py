@@ -10,6 +10,10 @@ HTML_ENTITIES = { 'apos': "'" }
 
 
 def get_page_backup(url):
+    # fix url
+    k = urllib.parse.urlparse(url)
+    url = k.geturl()
+    
     req = urllib.request.Request(url, headers={'Accept':'*/*'})
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0')
     u = urllib.request.urlopen(req)
