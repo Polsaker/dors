@@ -22,11 +22,15 @@ class Event(object):
         self.target = target
         self.message = message
         
+        self.match = None # regex match for stuffHooks
+        
         self.pm = False if target.startswith('#') else True
         self.replyto = source if self.pm else target
         
         self.command = message.split(" ")[0][1:] if message[0] == "." else None
         self.args = list(filter(None, message.split(" ")[1:]))
+        
+        self.text = " ".join(self.args)
 
 
 class Jenni(Waifu):
@@ -37,6 +41,8 @@ class Jenni(Waifu):
         self.startupHooks = []
         self.commandHooks = []
         
+        self.plugins = {}
+        
         for module in os.listdir(os.path.dirname("modules/")):
             if module == '__init__.py' or module[-3:] != '.py':
                 continue
@@ -45,6 +51,7 @@ class Jenni(Waifu):
             themodule = __import__("modules." + module[:-3], locals(), globals())
             themodule = getattr(themodule, module[:-3])
 
+            self.plugins[module[:-3]] = themodule
             # Iterate over all the methods in the module to find handlers
             funcs = [f for _, f in themodule.__dict__.items() if callable(f)]
             for func in funcs:
@@ -129,6 +136,12 @@ class Jenni(Waifu):
         if self.users[user]['account'] not in config.admins:
             return False
         return True
+    
+    def getPlugin(self, plugin):
+        try:
+            return self.plugins[plugin]
+        except KeyError:
+            return False
     
 if __name__ == '__main__':
     client = Jenni(config.nick, sasl_username=config.user, sasl_password=config.password)
