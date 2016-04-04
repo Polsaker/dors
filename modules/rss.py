@@ -121,7 +121,10 @@ def check_rss(irc):
                     lastposted.append(c[3])
                 to_post = []
                 for i in fp.entries:
-                    if i.link in lastposted:
+                    if i.link not in lastposted:
+                        t = (feed_channel, feed_site_name, i.title, i.link,)
+                        cursor_recent.execute("INSERT INTO recent VALUES (?, ?, ?, ?)", t)
+                        conn_recent.commit()
                         to_post.append(i)
                 to_post.reverse()
                 for i in to_post:
@@ -130,8 +133,6 @@ def check_rss(irc):
             #cursor_recent.execute("DELETE FROM recent WHERE channel = ? and site_name = ?", sql_text)
             #conn_recent.commit()
 
-            t = (feed_channel, feed_site_name, entry.title, article_url,)
-            cursor_recent.execute("INSERT INTO recent VALUES (?, ?, ?, ?)", t)
             conn_recent.commit()
     
     _firstrun = False
