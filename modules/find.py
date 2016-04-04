@@ -40,6 +40,8 @@ def save_db(search_dict):
     checkdb(c)
     conn.commit()
     
+    c.execute("DELETE FROM find")
+    
     for x in search_dict:
         for y in search_dict[x]:
             for z in search_dict[x][y]:
