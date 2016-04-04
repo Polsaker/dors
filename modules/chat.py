@@ -77,7 +77,10 @@ def chat(irc, event):
             return
     else:
         return
-
+    
+    if type(msgo) == bytes:
+        msgo = msgo.decode()
+    
     if msgo:
         time.sleep(random.randint(1, 5))
 
