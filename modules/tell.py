@@ -30,6 +30,7 @@ def load_db():
 
 
 def addReminder(tellee, teller, timenow, msg):
+    global database
     conn = sqlite3.connect('tell.db')
     c = conn.cursor()
     checkdb(c)
@@ -96,12 +97,23 @@ def getReminders(irc, channel, key, tellee):
     today = time.strftime('%d %b', time.gmtime())
 
     #jenni.tell_lock.acquire()
+    
+    conn = sqlite3.connect('tell.db')
+    c = conn.cursor()
+    checkdb(c)
+    conn.commit()
+
 
     for entry in database[key]:
         if entry['time'].startswith(today):
             entry['time'] = entry['time'][len(today) + 1:]
         lines.append(template.format(entry['tellee'], entry['time'], 
                                      entry['teller'], entry['msg']))
+    
+    c.execute("DELETE FROM tell WHERE tellee = ?", (key,))
+    conn.commit()
+    c.close()
+
 
     try: del database[key]
     except KeyError: irc.message(channel, 'Er...')
