@@ -11,6 +11,8 @@ def wolframalpha(irc, ev):
         return irc.message(ev.replyto, "Error while querying WolframAlpha")
     
     pods = [x for x in res]
+    if not pods:
+        return irc.message(ev.replyto, "No data.")
     txtpods = [x.text if x.text else "" for x in pods[:3]]
     # prettifying
     txtpods = [": ".join([l.strip() for l in x.split(" | ")]) for x in txtpods]
