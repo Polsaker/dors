@@ -121,11 +121,12 @@ def check_rss(irc):
                     lastposted.append(c[3])
                 to_post = []
                 for i in fp.entries:
-                    if (i.link not in lastposted) and (i not in to_post):
+                    if i.link not in lastposted:
                         t = (feed_channel, feed_site_name, i.title, i.link,)
                         cursor_recent.execute("INSERT INTO recent VALUES (?, ?, ?, ?)", t)
                         conn_recent.commit()
                         to_post.append(i)
+                        lastposted.append(i.link)
                 to_post.reverse()
                 for i in to_post:
                     announce_rss(irc, feed_channel, feed_site_name, i)
