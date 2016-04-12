@@ -1,7 +1,7 @@
 from jenni import commandHook
 import random
 
-@commandHook('choice', help=".choice <something> <something else> [third choice] ... -- Makes a choice for you")
+@commandHook(['pick', 'choose', 'choice'], help=".choice <something> <something else> [third choice] ... -- Makes a choice for you")
 def choice(irc, event):
     if len(event.args) < 2:
         return irc.message(event.replyto, "Not enough parameters. Usage: .choice <something> <something else> [third choice]")
