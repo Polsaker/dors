@@ -46,26 +46,32 @@ class Jenni(Waifu):
         for module in os.listdir(os.path.dirname("modules/")):
             if module == '__init__.py' or module[-3:] != '.py':
                 continue
+            module = module[:-3]
             if module in config.disabled_modules:
                 continue
-            themodule = __import__("modules." + module[:-3], locals(), globals())
-            themodule = getattr(themodule, module[:-3])
+            self.loadModule(module)
+            
+    
+    def loadModule(self, module):
+        themodule = __import__("modules." + module, locals(), globals())
+        themodule = getattr(themodule, module)
 
-            self.plugins[module[:-3]] = themodule
-            # Iterate over all the methods in the module to find handlers
-            funcs = [f for _, f in themodule.__dict__.items() if callable(f)]
-            for func in funcs:
-                try:
-                    func._handler
-                except:
-                    continue # nothing to do here.
-                if func._handler == 1: # Stuff handler.
-                    self.stuffHandlers.append({'regex': func._regex, 'func': func, 'module': module[:-3]})
-                elif func._handler == 2: # startup
-                    self.startupHooks.append({'func': func, 'module': module[:-3]})
-                elif func._handler == 3: # command
-                    self.commandHooks.append({'commands': func._commands, 'help': func._help, 'func': func, 'module': module[:-3]})
-                    
+        self.plugins[module] = themodule
+        # Iterate over all the methods in the module to find handlers
+        funcs = [f for _, f in themodule.__dict__.items() if callable(f)]
+        for func in funcs:
+            try:
+                func._handler
+            except:
+                continue # nothing to do here.
+            if func._handler == 1: # Stuff handler.
+                self.stuffHandlers.append({'regex': func._regex, 'func': func, 'module': module})
+            elif func._handler == 2: # startup
+                self.startupHooks.append({'func': func, 'module': module})
+            elif func._handler == 3: # command
+                self.commandHooks.append({'commands': func._commands, 'help': func._help, 'func': func, 'module': module})
+
+                        
     @pydle.coroutine
     def on_message(self, target, source, message):
         event = Event(source, target, message)
