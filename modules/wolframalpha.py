@@ -1,7 +1,13 @@
 from jenni import commandHook
 import wolframalpha
 import config
+import re
+
+unire = re.compile(r"\\:([0-9a-fA-F]{4})")
 client = wolframalpha.Client(config.wolframalpha_apikey)
+def fixaroo(m):
+    txt = m.group(1)
+    return chr(int(txt, 16))
 
 @commandHook(['wolframalpha', 'wa'], help=".wa <input> -- sends input to wolframalpha and returns results")
 def wolframalpha(irc, ev):
@@ -22,6 +28,7 @@ def wolframalpha(irc, ev):
     
     resp = " | ".join(txtpods)
     resp = resp.replace("  ", " ")
+    resp = unire.sub(fixaroo, resp)
     if len(resp) > 400:
         resp = resp[:400] + "…"
     
