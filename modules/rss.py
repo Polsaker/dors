@@ -114,7 +114,10 @@ def check_rss(irc):
             cursor_recent.execute("SELECT * FROM recent WHERE channel = ? AND site_name = ?", sql_text)
             crfa = cursor_recent.fetchall()
             if len(crfa) < 1: # First run, dump only last entry.
-                announce_rss(irc, feed_channel, feed_site_name, entry)
+                announce_rss(irc, feed_channel, feed_site_name, entry
+                t = (feed_channel, feed_site_name, i.title, i.link,)
+                cursor_recent.execute("INSERT INTO recent VALUES (?, ?, ?, ?)", t)
+                conn_recent.commit()
             else: # Not the first entry, find all the entries posted since then and announce em'
                 lastposted = []
                 for c in crfa:
