@@ -143,7 +143,7 @@ def f_time(self, ev):
             if r_tz.match(tz) and os.path.isfile('/usr/share/zoneinfo/' + tz):
                 cmd, PIPE = 'TZ=%s date' % tz, subprocess.PIPE
                 proc = subprocess.Popen(cmd, shell=True, stdout=PIPE)
-                self.message(event.replyto, proc.communicate()[0])
+                self.message(ev.replyto, proc.communicate()[0])
             else:
                 error = "Sorry, I don't know about the '%s' timezone." % tz
                 self.message(event.replyto, origin.nick + ': ' + error)
