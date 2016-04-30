@@ -1,5 +1,5 @@
 from dors import commandHook
-
+import sys
 
 @commandHook('load', help="load <module> -- Loads a module")
 def load(irc, event):
