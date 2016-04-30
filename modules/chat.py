@@ -1,4 +1,6 @@
-from jenni import stuffHook
+# Ported from jenni (yanosbot)
+
+from dors import stuffHook
 import config
 
 import cleverbot
@@ -53,7 +55,6 @@ def chat(irc, event):
     if channel.startswith('+#') or channel.startswith('@#'):
         return
     elif channel.startswith('#'):
-        ## in a channel and prepended with jenni's name
         pm = False
         try:
             time.sleep(random.randint(1, 5))
@@ -84,7 +85,7 @@ def chat(irc, event):
     if msgo:
         time.sleep(random.randint(1, 5))
 
-        response = re.sub('(?i)clever(me|script|bot)', 'jenni', msgo)
+        response = re.sub('(?i)clever(me|script|bot)', config.nick, msgo)
         response = re.sub('(?i)\S+bot', (base64.b64decode(random.choice(noun))), response)
         response = re.sub('(?i)(bot|human)', (base64.b64decode(random.choice(noun))), response)
         response = re.sub('(?i)computer', (base64.b64decode(random.choice(noun))), response)

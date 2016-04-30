@@ -1,4 +1,4 @@
-from jenni import commandHook
+from dors import commandHook
 
 
 @commandHook('load', help="load <module> -- Loads a module")

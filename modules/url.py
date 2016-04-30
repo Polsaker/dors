@@ -1,4 +1,4 @@
-from jenni import stuffHook
+from dors import stuffHook
 import config
 import re
 import urllib.request, urllib.error, urllib.parse

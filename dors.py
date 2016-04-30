@@ -33,7 +33,7 @@ class Event(object):
         self.text = " ".join(self.args)
 
 
-class Jenni(Waifu):
+class Dors(Waifu):
     def __init__(self, nick, *args, **kwargs):
         super().__init__(nick, *args, **kwargs)
                 
@@ -150,7 +150,7 @@ class Jenni(Waifu):
             return False
     
 if __name__ == '__main__':
-    client = Jenni(config.nick, sasl_username=config.user, sasl_password=config.password)
+    client = Dors(config.nick, sasl_username=config.user, sasl_password=config.password)
 
     client.connect(config.server, config.port, tls=config.tls)
     client.handle_forever()

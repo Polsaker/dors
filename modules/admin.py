@@ -1,4 +1,4 @@
-from jenni import commandHook, startupHook
+from dors import commandHook, startupHook
 import sqlite3
 
 def checkdb(c):

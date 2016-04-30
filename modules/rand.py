@@ -1,4 +1,4 @@
-from jenni import commandHook
+from dors import commandHook
 import random
 
 @commandHook(['pick', 'choose', 'choice'], help=".choice <something> <something else> [third choice] ... -- Makes a choice for you")

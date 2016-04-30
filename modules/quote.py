@@ -1,4 +1,4 @@
-from jenni import commandHook
+from dors import commandHook
 import random
 import itertools
 

@@ -1,4 +1,4 @@
-from jenni import stuffHook, startupHook
+from dors import stuffHook, startupHook
 import time
 import sqlite3
 import re
