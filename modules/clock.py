@@ -166,3 +166,7 @@ def f_time(self, ev):
                 tz = int(tz)
             msg = time.strftime("%a, %d %b %Y %H:%M:%S UTC" + "%s%s" % (sign, str(tz)), timenow)
             self.message(ev.replyto, msg)
+
+@commandHook('yi')
+def yi(irc, ev):
+    irc.message(ev.replyto, "Yi yan! Chin chong!")
