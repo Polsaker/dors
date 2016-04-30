@@ -51,3 +51,6 @@ def unloadModule(irc, module):
 
     # 3 - Unregister module
     del irc.plugins[module]
+    
+    # 4 - Try to remove stuff
+    del sys.modules['modules.' + module]
