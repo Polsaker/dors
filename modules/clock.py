@@ -96,8 +96,8 @@ TZ3 = {
    'ART': -3
 }
 
-TimeZones.extend(TZ1)
-TimeZones.extend(TZ3)
+TimeZones.update(TZ1)
+TimeZones.update(TZ3)
 
 @commandHook(['time', 't'], help=".time UTC")
 def f_time(self, ev):
