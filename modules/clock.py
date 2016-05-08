@@ -146,7 +146,7 @@ def f_time(self, ev):
                 self.message(ev.replyto, proc.communicate()[0])
             else:
                 error = "Sorry, I don't know about the '%s' timezone." % tz
-                self.message(event.replyto, origin.nick + ': ' + error)
+                self.message(ev.replyto, origin.nick + ': ' + error)
         else:
             if t >= 100 or t <= -100:
                 return self.reply('Time requested is too far away.')
