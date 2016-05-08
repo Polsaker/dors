@@ -96,6 +96,8 @@ TZ3 = {
    'ART': -3
 }
 
+TimeZones += TZ1 + TZ3
+
 @commandHook(['time', 't'], help=".time UTC")
 def f_time(self, ev):
     """Returns the current time."""
@@ -146,7 +148,7 @@ def f_time(self, ev):
                 self.message(ev.replyto, proc.communicate()[0])
             else:
                 error = "Sorry, I don't know about the '%s' timezone." % tz
-                self.message(ev.replyto, origin.nick + ': ' + error)
+                self.message(ev.replyto, ev.source + ': ' + error)
         else:
             if t >= 100 or t <= -100:
                 return self.reply('Time requested is too far away.')
