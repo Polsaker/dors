@@ -40,7 +40,7 @@ def remove_nonprint(text):
     return new
 
 
-def find_title(url):
+def find_title(url, irc):
     """
     This finds the title when provided with a string of a URL.
     """
@@ -61,7 +61,12 @@ def find_title(url):
 
     if 'zerobin.net' in url:
         return True, 'ZeroBin'
+    
+    if 'store.steampowered.com/app' in url and 'steam' in irc.plugins:
+        appid = re.search('.*store.steampowered.com/app/(\d+).*', url)
+        return True, irc.plugins['steam'].getAppInfo(appid.group(1), False)
 
+       
     #url = url.decode()
     msg = str()
     k = 0
@@ -178,14 +183,12 @@ def getTLD(url):
         idx = 6
     u = url[idx:]
     f = u.find('/')
-    if f == -1:
-        u = url
-    else:
-        u = url[0:idx] + u[0:f]
+    if f != -1:
+        u = u[0:f]
     return remove_nonprint(u)
 
 
-def get_results(text, manual=False):
+def get_results(text, irc, manual=False):
     if not text:
         return False, list()
     a = re.findall(url_finder, text)
@@ -207,16 +210,16 @@ def get_results(text, manual=False):
             url = url.replace('http:', 'https:')
 
         bitly = url
-
+    
         if not url.startswith("!"):
-            passs, page_title = find_title(url)
+            passs, page_title = find_title(url, irc)
             display.append([page_title, url, bitly, passs])
         else:
             ## has exclusion character
             if manual:
                 ## only process excluded URLs if .title is used
                 url = url[1:]
-                passs, page_title = find_title(url)
+                passs, page_title = find_title(url, irc)
                 display.append([page_title, url, bitly, passs])
         i += 1
 
@@ -237,7 +240,7 @@ def show_title_auto(irc, ev):
         return
 
     try:
-        status, results = get_results(ev.message)
+        status, results = get_results(ev.message, irc)
     except Exception as e:
         print('[%s]' % e, ev.message)
         return
