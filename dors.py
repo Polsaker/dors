@@ -8,6 +8,7 @@ import re
 import traceback
 import threading
 import copy
+import time
 
 Waifu = pydle.featurize(pydle.features.RFC1459Support, pydle.features.WHOXSupport,
                              pydle.features.ISUPPORTSupport,
@@ -31,6 +32,7 @@ class Event(object):
         self.args = list(filter(None, message.split(" ")[1:]))
         
         self.text = " ".join(self.args)
+        
 
 
 class Dors(Waifu):
@@ -43,6 +45,10 @@ class Dors(Waifu):
         
         self.plugins = {}
         
+        
+        self.lastheardfrom = {}
+        self.sourcehistory = []
+
         for module in os.listdir(os.path.dirname("modules/")):
             if module == '__init__.py' or module[-3:] != '.py':
                 continue
@@ -77,6 +83,17 @@ class Dors(Waifu):
         event = Event(source, target, message)
         # Commands
         if message.strip().startswith(config.prefix):
+            try:
+                if ((time.time() - self.lastheardfrom[source] < 6) and # if it's been six seconds since this person has made a command...
+                    (source == self.sourcehistory[-2] and source == self.sourcehistory[-1]) and # And they made the last two commands...
+                    not self.isadmin(source)): # And the person is not an administrator...
+                    return # Ignore it
+            except (KeyError, IndexError):
+                pass
+            finally:
+                self.lastheardfrom[source] = time.time()
+                self.sourcehistory.append(source)
+
             command = message.strip().split()[0].replace(config.prefix, '', 1)
             args = message.strip().split()[1:]
             
