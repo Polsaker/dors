@@ -106,6 +106,7 @@ class Dors(Waifu):
                 try:
                     pot['func'](self, event)
                 except Exception as e:
+                    print(traceback.format_exc())
                     tb = repr(e) + traceback.format_exc().splitlines()[-3]
                     self.message(target, "Error in {0} module: {1}".format(pot['module'], tb))
 
