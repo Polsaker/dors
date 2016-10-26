@@ -56,11 +56,8 @@ def chat(irc, event):
         return
     elif channel.startswith('#'):
         pm = False
-        try:
-            time.sleep(random.randint(1, 5))
-            msgo = mycb.ask(msgi)
-        except:
-            return
+        time.sleep(random.randint(1, 5))
+        msgo = mycb.ask(msgi)
     elif not channel.startswith('#'):
         ## in a PM and not prepended with jenni's name
         pm = True
@@ -71,11 +68,8 @@ def chat(irc, event):
             for x in nowords:
                 if spt.startswith(x):
                     return
-        try:
-            time.sleep(random.randint(1, 5))
-            msgo = mycb.ask(msgi)
-        except:
-            return
+        time.sleep(random.randint(1, 5))
+        msgo = mycb.ask(msgi)
     else:
         return
     
