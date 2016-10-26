@@ -121,6 +121,8 @@ class Dors(Waifu):
                 try:
                     stuff['func'](self, event)
                 except Exception as e:
+                    print(traceback.format_exc())
+
                     tb = repr(e) + traceback.format_exc().splitlines()[-3]
                     self.message(target, "Error in {0} module: {1}".format(stuff['module'], tb))
 
@@ -153,6 +155,8 @@ class Dors(Waifu):
                 t.daemon=True
                 t.start()
             except Exception as e:
+                print(traceback.format_exc())
+
                 tb = repr(e) + traceback.format_exc().splitlines()[-3]
                 print("Error in {0} module: {1}".format(hook['module'], tb))
 
