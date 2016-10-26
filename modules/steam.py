@@ -28,6 +28,10 @@ def steam(irc, ev):
     try:
         appid = ts_apps[game.lower()]
     except KeyError:
+        try:
+            appid = int(game.lower())
+        except ValueError:
+            return irc.message(ev.replyto, "Couldn't find \002{0}\002".format(game))
         return irc.message(ev.replyto, "Couldn't find \002{0}\002".format(game))
 
     irc.message(ev.replyto, getAppInfo(appid))
