@@ -80,9 +80,9 @@ def chat(irc, event):
         time.sleep(random.randint(1, 5))
 
         response = re.sub('(?i)clever(me|script|bot)', config.nick, msgo)
-        response = re.sub('(?i)\S+bot', (base64.b64decode(random.choice(noun))), response)
-        response = re.sub('(?i)(bot|human)', (base64.b64decode(random.choice(noun))), response)
-        response = re.sub('(?i)computer', (base64.b64decode(random.choice(noun))), response)
+        response = re.sub('(?i)\S+bot', (base64.b64decode(random.choice(noun)).decode()), response)
+        response = re.sub('(?i)(bot|human)', (base64.b64decode(random.choice(noun)).decode()), response)
+        response = re.sub('(?i)computer', (base64.b64decode(random.choice(noun)).decode()), response)
         response = r_entity.sub(e, response)
 
         if random.random() <= 0.5:
