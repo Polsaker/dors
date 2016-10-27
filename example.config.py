@@ -28,3 +28,6 @@ urlblacklist = ['git.io', 'bpaste.net', 'bitbucket.org']
 
 # WolframAlpha API key (for wolframalpha module)
 wolframalpha_apikey = "123456-7894561234"
+
+google_apikey = "PutItHere"
+darksky_apikey = "WewLads"
