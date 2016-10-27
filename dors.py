@@ -104,7 +104,7 @@ class Dors(Waifu):
 
             if pot:
                 try:
-                    pot['func'](self, event)
+                    pot['func'](self.wrapper(event), event)
                 except Exception as e:
                     print(traceback.format_exc())
                     tb = repr(e) + traceback.format_exc().splitlines()[-3]
@@ -119,7 +119,7 @@ class Dors(Waifu):
                 event.match = stuff['regex'].match(message)
                 # Got a match. Call the function
                 try:
-                    stuff['func'](self, event)
+                    stuff['func'](self.wrapper(event), event)
                 except Exception as e:
                     print(traceback.format_exc())
 
@@ -170,6 +170,28 @@ class Dors(Waifu):
             return self.plugins[plugin]
         except KeyError:
             return False
+            
+    def wrapper(self, event):
+        """ we wrap ourselves before passing to modules """
+        class BotWrapper(object):
+            def __init__(self, bot):
+                self._bot = bot
+
+            def __getattr__(self, attr):
+                if attr == 'say' or attr == 'msg':
+                    return (lambda msg: self._bot.message(event.replyto, msg))
+                elif attr == 'reply':
+                    return (lambda msg: self._bot.message(event.replyto, ev.source + ': ' + msg))
+                
+                return getattr(self._bot, attr)
+
+            def __setattr__(self, attr, value):
+                if attr == '_bot':
+                    return super(BotWrapper, self).__setattr__(attr, value)
+                else:
+                    return setattr(self._bot, attr, value)
+
+        return BotWrapper(self)
     
 if __name__ == '__main__':
     client = Dors(config.nick, sasl_username=config.user, sasl_password=config.password)
