@@ -50,7 +50,7 @@ def seen(irc, ev):
     
     if ts[:-1]:
         resp += ", ".join(ts[:-1]) + " and "
-    resp += ts[-1] + "ago"
+    resp += ts[-1] + " ago"
     
     if last_seen[2] == ev.target:
         resp += " on this channel, saying <{0}> {1}".format(target, last_seen[0])
