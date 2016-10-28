@@ -114,10 +114,11 @@ def weather(irc, ev):
     speed = weather['currently']['windSpeed']
     degrees = weather['currently']['windBearing']
 
-    description = speed_desc(speed)
     degrees = wind_dir(degrees)
-    speed_mph = round(speed * 0.621371)
-    reply += ", wind: \002{0}\002 {1}kmh ({2}mph) ({3}). ".format(description, speed, speed_mph, degrees)
+    speed_mph = speed * 0.621371
+    description = speed_desc(speed_mph)
+
+    reply += ", wind: \002{0}\002 {1}kmh ({2}mph) ({3}). ".format(description, speed, round(speed_mph), degrees)
 
     reply += " Forecast: {0}".format(getForecast(weather, 0))
     reply += getForecast(weather, 1)
