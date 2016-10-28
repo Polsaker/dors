@@ -29,5 +29,8 @@ urlblacklist = ['git.io', 'bpaste.net', 'bitbucket.org']
 # WolframAlpha API key (for wolframalpha module)
 wolframalpha_apikey = "123456-7894561234"
 
+# Google API key (currently used on the weather module)
 google_apikey = "PutItHere"
+
+# Darksky.net API key (for weather module)
 darksky_apikey = "WewLads"

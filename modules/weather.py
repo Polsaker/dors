@@ -72,7 +72,7 @@ def getForecast(weather, day):
     reply = '\x0310\x02\x1F{0}\x1F\x02\x03: '.format(dotw[dotw_day])
 
     reply += "\002{0}\002 - Max temp: {1}\u00B0C ({2}\u00B0F)".format(cond, matemp, matemp_f)
-    reply += " Min temp: {0}\u00B0C ({1}\u00B0F).".format(mitemp, mitemp_f)
+    reply += " Min temp: {0}\u00B0C ({1}\u00B0F). ".format(mitemp, mitemp_f)
     return reply
 
 @commandHook(['weather', 'wx', 'w'], help="Shows the weather for a given location. Usage: weather <location>")
