@@ -49,7 +49,7 @@ def seen(irc, ev):
         ts.append("{0} seconds ".format(seconds))
     
     if ts[:-1]:
-        resp += ", ".join(ts[:-1]) + "and "
+        resp += ",".join(ts[:-1]) + " and "
     resp += ts[-1] + "ago"
     
     if last_seen[2] == ev.target:
