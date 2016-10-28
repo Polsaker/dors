@@ -36,20 +36,20 @@ def seen(irc, ev):
     resp = "I saw \002{0}\002 last time ".format(target)
     ts = []
     if weeks:
-        ts.append("{0} weeks ".format(weeks))
+        ts.append("{0} weeks".format(weeks))
     if days:
-        ts.append("{0} days ".format(days))
+        ts.append("{0} days".format(days))
     if hours:
-        ts.append("{0} hours ".format(hours))
+        ts.append("{0} hours".format(hours))
     if minutes and not weeks:
-        ts.append("{0} minutes ".format(minutes))
+        ts.append("{0} minutes".format(minutes))
     if not minutes and not hours and not days and not weeks:
         return irc.reply("I can confirm that {0} is still around and not lurking!".format(target))
     if seconds and not days:
-        ts.append("{0} seconds ".format(seconds))
+        ts.append("{0} seconds".format(seconds))
     
     if ts[:-1]:
-        resp += ",".join(ts[:-1]) + " and "
+        resp += ", ".join(ts[:-1]) + " and "
     resp += ts[-1] + "ago"
     
     if last_seen[2] == ev.target:
