@@ -3,8 +3,6 @@ import time
 import sqlite3
 import re
 
-search = None
-
 def checkdb(c):
     c.execute("CREATE TABLE IF NOT EXISTS find ( channel text,\
             nick text, line text, ts text)")
@@ -29,8 +27,10 @@ def load_db():
             search_dict[i[0]][i[1]]
         except KeyError:
             search_dict[i[0]][i[1]] = []
-        
-        search_dict[i[0]][i[1]].append([i[2], i[3]])
+        try:
+            search_dict[i[0]][i[1]].append([i[2], int(i[3])])
+        except:
+            continue
     
     return search_dict
 
@@ -50,27 +50,24 @@ def save_db(search_dict):
 
 @startupHook()
 def startup(irc):
-    global search
-    search = load_db()
+    irc.recent_lines = load_db()
     while True:
         time.sleep(60)
-        save_db(search)
+        save_db(irc.recent_lines)
 
 @stuffHook(".+")
-def collectlines(irc, ev):
-    global search
-        
+def collectlines(irc, ev):        
     channel = ev.target.lower()
-    nick = ev.source
+    nick = str(ev.source).lower()
     if not channel.startswith('#'): return
     
-    if channel not in search:
-        search[channel] = {}
+    if channel not in irc.recent_lines:
+        irc.recent_lines[channel] = {}
         
-    if nick not in search[channel]:
-        search[channel][nick] = []
+    if nick not in irc.recent_lines[channel]:
+        irc.recent_lines[channel][nick] = []
         
-    templist = search[channel][nick]
+    templist = irc.recent_lines[channel][nick]
     line = ev.message
     if line.startswith("s/"):
         return
@@ -80,19 +77,18 @@ def collectlines(irc, ev):
     else:
         templist.append([line, int(time.time())])
     del templist[:-10]
-    search[channel][nick] = templist
+    irc.recent_lines[channel][nick] = templist
 
 @stuffHook('(?iu)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w.:-])(.*)')
 def findandreplace(irc, ev):
-    global search
     channel = ev.target.lower()
-    nick = ev.source
+    nick = ev.source.lower()
     if not channel.startswith('#'): return
 
     rnick = ev.match.group(1) or nick # Correcting other person vs self.
 
     # only do something if there is conversation to work with
-    if channel not in search or rnick not in search[channel]: return
+    if channel not in irc.recent_lines or rnick not in irc.recent_lines[channel]: return
 
     sep = ev.match.group(2)
     rest = ev.match.group(3).split(sep)
@@ -113,7 +109,7 @@ def findandreplace(irc, ev):
     else:
         repl = lambda s: s.replace(rest[0],rest[1],count)
 
-    for line in reversed(search[channel][rnick]):
+    for line in reversed(irc.recent_lines[channel][rnick]):
         line = line[0]
         if line.startswith("\x01ACTION"):
             me = True # /me command
@@ -130,10 +126,10 @@ def findandreplace(irc, ev):
         new_phrase = new_phrase[:512]
 
     # Save the new "edited" message.
-    templist = search[channel][rnick]
+    templist = irc.recent_lines[channel][rnick]
     templist.append((me and '\x01ACTION ' or '') + new_phrase)
-    search[channel][rnick] = templist
-    save_db(search)
+    irc.recent_lines[channel][rnick] = templist
+    save_db(irc.recent_lines)
 
     # output
     phrase = nick + (ev.match.group(1) and ' thinks ' + rnick or '') + (me and ' ' or " \x02meant\x02 to say: ") + new_phrase
