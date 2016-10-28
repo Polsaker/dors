@@ -19,6 +19,7 @@ Waifu = pydle.featurize(pydle.features.RFC1459Support, pydle.features.WHOXSuppor
 
 class Event(object):
     def __init__(self, source, target, message):
+        
         self.source = source
         self.target = target
         self.message = message
@@ -38,7 +39,9 @@ class Event(object):
 class Dors(Waifu):
     def __init__(self, nick, *args, **kwargs):
         super().__init__(nick, *args, **kwargs)
-                
+
+        self.config = config
+
         self.stuffHandlers = []
         self.startupHooks = []
         self.commandHooks = []
@@ -181,7 +184,7 @@ class Dors(Waifu):
                 if attr == 'say' or attr == 'msg':
                     return (lambda msg: self._bot.message(event.replyto, msg))
                 elif attr == 'reply':
-                    return (lambda msg: self._bot.message(event.replyto, ev.source + ': ' + msg))
+                    return (lambda msg: self._bot.message(event.replyto, event.source + ': ' + msg))
                 
                 return getattr(self._bot, attr)
 
@@ -217,7 +220,7 @@ def commandHook(commands, help=""):
         return func
     return wrap
     
-def startupHook():
+def startupHook(dummy=None):
     def wrap(func):
         func._handler = 2 # 2: function called when bot connects.
         return func
