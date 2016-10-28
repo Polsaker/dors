@@ -68,7 +68,7 @@ def getForecast(weather, day):
     mitemp = weather['daily']['data'][day]['temperatureMin']
     matemp_f = round(matemp * 1.8 + 32)
     mitemp_f = round(mitemp * 1.8 + 32)
-    dotw_day = datetime.datetime.fromtimestamp(weather['daily']['data'][day]['sunriseTime']).weekday()
+    dotw_day = datetime.datetime.fromtimestamp(weather['daily']['data'][day]['time']).weekday()
     reply = '\x0310\x02\x1F{0}\x1F\x02\x03: '.format(dotw[dotw_day])
 
     reply += "\002{0}\002 - Max temp: {1}\u00B0C ({2}\u00B0F)".format(cond, matemp, matemp_f)
