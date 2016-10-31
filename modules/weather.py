@@ -64,6 +64,8 @@ def speed_desc(speed):
 
 def getForecast(weather, day):
     cond = weather['daily']['data'][day]['icon'].replace('-', ' ').title()
+    cond = cond.replace('Day', '').replace('Night', '')
+
     matemp = weather['daily']['data'][day]['temperatureMax']
     mitemp = weather['daily']['data'][day]['temperatureMin']
     matemp_f = round(matemp * 1.8 + 32)
@@ -97,7 +99,8 @@ def weather(irc, ev):
     
     # currently
     cond = weather['currently']['icon'].replace('-', ' ').title()
-    reply = "Weather on \00310\002{0}\002\003: \002{1}\002 - ".format(location, cond)
+    cond = cond.replace('Day', '').replace('Night', '')
+    reply = "Weather on \00310\002{0}\002\003: \002{1}\002; ".format(location, cond)
     temp = weather['currently']['temperature']
     aptemp = weather['currently']['apparentTemperature']
     temp_f = round(weather['currently']['temperature'] * 1.8 + 32)
