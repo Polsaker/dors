@@ -40,12 +40,13 @@ def our_on_message(target, source, message):
 def setupIgnore(bot):
     global gbot
     global oldOn_message
+    if gbot is None
+        oldOn_message = bot.on_message
+        
+        bot.on_message = our_on_message
 
     gbot = bot
     bot.ignores = load_db()
-    oldOn_message = bot.on_message
-    
-    bot.on_message = our_on_message
 
 
 @commandHook('ignore', help="ignore <add|del|list> [ignore]")
