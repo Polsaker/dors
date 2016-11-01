@@ -134,7 +134,7 @@ def grab(irc, ev):
     nick = parts[0]
     channel = ev.target.lower()
 
-    quote_db = find.search
+    quote_db = irc.recent_lines
         
     if quote_db and (channel in quote_db) and (nick in quote_db[channel]):
         quotes_by_nick = quote_db[channel][nick]
