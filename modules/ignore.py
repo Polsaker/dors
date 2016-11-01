@@ -40,7 +40,7 @@ def our_on_message(target, source, message):
 def setupIgnore(bot):
     global gbot
     global oldOn_message
-    if gbot is None
+    if gbot is None:
         oldOn_message = bot.on_message
         
         bot.on_message = our_on_message
