@@ -3,7 +3,7 @@
 from dors import stuffHook
 import config
 
-import cleverbot
+from cleverwrap import CleverWrap
 from html.entities import name2codepoint
 import json
 
@@ -12,7 +12,7 @@ import re
 import time
 import base64
 
-mycb = cleverbot.Cleverbot()
+mycb = {}
 
 nowords = ['reload', 'help', 'tell', 'ask', 'ping']
 
@@ -44,6 +44,10 @@ def chat(irc, event):
         text = " ".join(text.split(" ")[1:])
     
     channel = event.target
+    try:
+        mycb[channel]
+    except KeyError:
+        mycb[channel] = CleverWrap(config.CLEVERBOT_API_KEY)
 
     for x in nowords:
         if text.startswith(x):
@@ -57,7 +61,7 @@ def chat(irc, event):
     elif channel.startswith('#'):
         pm = False
         time.sleep(random.randint(1, 5))
-        msgo = mycb.ask(msgi)
+        msgo = mycb[channel].say(msgi)
     elif not channel.startswith('#'):
         ## in a PM and not prepended with jenni's name
         pm = True
@@ -69,7 +73,7 @@ def chat(irc, event):
                 if spt.startswith(x):
                     return
         time.sleep(random.randint(1, 5))
-        msgo = mycb.ask(msgi)
+        msgo = mycb[channel].say(msgi)
     else:
         return
     
