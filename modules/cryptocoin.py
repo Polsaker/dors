@@ -84,8 +84,13 @@ def coin(irc, ev):
         amount = float(ev.args[1])
     except IndexError or ValueError:
         amount = 1.0
+    try:
+        info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()[0]
+    except:
+        return irc.message(ev.replyto, ev.source + ": Coint not found")
+    message = "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
+                amount, info['symbol'], round(float(info['price_usd'])*amount,2))
+    if coin != 'bitcoin':
+        message += ", ฿\002{0}\002".format(round(float(info['price_btc'])*amount,8))
 
-    info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()
-    message = "\002{0}\002 \002{1}\002 => $\002{2}\002, ฿\002{3}\002.".format(
-                amount, info['symbol'], round(info['price_usd']*amount,2), round(info['price_btc']*amount,8))
-    irc.message(ev.replyto, ev.source + ": " + message) 
+    irc.message(ev.replyto, ev.source + ": " + message + '.') 
