@@ -73,7 +73,13 @@ def doge(irc, ev):
     
     irc.message(ev.replyto, ev.source + ": " + message)
     
-    
+
+def prettify(thing):
+    if thing > 0:
+        return "\00303+" + str(thing) + "\003"
+    elif thing < 0:
+        return "\00304" + str(thing) + "\003"
+
 @commandHook(['coin'])
 def coin(irc, ev):
     try:
@@ -92,5 +98,8 @@ def coin(irc, ev):
                 amount, info['symbol'], round(float(info['price_usd'])*amount,2))
     if coin != 'bitcoin':
         message += ", ฿\002{0}\002".format(round(float(info['price_btc'])*amount,8))
-
+    message += "  [hour: \002{0}\002%, day: \002{1}\002%, week: \002{2}\002%]".format(
+               prettify(float(info['percent_change_1h'])),
+               prettify(float(info['percent_change_24h'])),
+               prettify(float(info['percent_change_7d'])))
     irc.message(ev.replyto, ev.source + ": " + message + '.') 
