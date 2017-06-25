@@ -71,4 +71,21 @@ def doge(irc, ev):
                 dogecoin, bitcoin, round(bitprice['USD']['last']*bitcoin,2), round(bitprice['EUR']['last']*bitcoin,2),
                 round(bitprice['GBP']['last']*bitcoin,2))
     
-    irc.message(ev.replyto, ev.source + ": " + message)   
+    irc.message(ev.replyto, ev.source + ": " + message)
+    
+    
+@commandHook(['coin'])
+def coin(irc, ev):
+    try:
+        coin = ev.args[0]
+    except IndexError or ValueError:
+        coin = 'bitcoin'
+    try:
+        amount = float(ev.args[1])
+    except IndexError or ValueError:
+        amount = 1.0
+
+    info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()
+    message = "\002{0}\002 \002{1}\002 => $\002{2}\002, ฿\002{3}\002.".format(
+                amount, info['symbol'], round(info['price_usd']*amount,2), round(info['price_btc']*amount,8))
+    irc.message(ev.replyto, ev.source + ": " + message) 
