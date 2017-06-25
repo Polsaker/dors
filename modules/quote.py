@@ -1,6 +1,7 @@
 from dors import commandHook
 import random
 import itertools
+import codecs
 
 def write_quote(quote):
     fn = open('quotes.txt', 'a')
@@ -24,7 +25,7 @@ def quote(irc, ev):
         param = None
     
     try:
-        fn = open('quotes.txt', 'r')
+        fn = codecs.open('quotes.txt', 'r', encoding='utf-8')
     except:
         return irc.message(ev.replyto, "Please add a quote first.")
     
