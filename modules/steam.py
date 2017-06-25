@@ -5,7 +5,7 @@ import time
 import requests
 
 ts_steam = 0
-ts_apps = []
+ts_apps = {}
 
 @startupHook()
 def updateapps(irc):
@@ -19,12 +19,13 @@ def updateapps(irc):
     ts_steam = time.time()
     ts_apps = applist
 
+updateapps(None)
+
 
 @commandHook(['steam', 'game'], help="Returns game info from Steam.")
 def steam(irc, ev):
     global ts_steam, ts_apps
     game = " ".join(ev.args)
-
     try:
         appid = ts_apps[game.lower()]
     except KeyError:
@@ -32,7 +33,6 @@ def steam(irc, ev):
             appid = int(game.lower())
         except ValueError:
             return irc.message(ev.replyto, "Couldn't find \002{0}\002".format(game))
-        return irc.message(ev.replyto, "Couldn't find \002{0}\002".format(game))
 
     irc.message(ev.replyto, getAppInfo(appid))
 
@@ -42,9 +42,9 @@ def getAppInfo(appid, error=True):
     
     try:
         if info[str(appid)]['success'] != True:
-            return "Error getting info for \002{0}\002".format(game) if error else 0
+            return "Error getting info for \002{0}\002".format(appid) if error else 0
     except KeyError:
-        return "Error getting info for \002{0}\002".format(game) if error else 0
+        return "Error getting info for \002{0}\002".format(appid) if error else 0
     
     info = info[str(appid)]['data']
     
