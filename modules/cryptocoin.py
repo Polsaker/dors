@@ -54,6 +54,15 @@ def doge(irc, ev):
 
     coinPrice(irc, 'dogecoin', dogecoin)
 
+@commandHook(['ethereum', 'eth'])
+def eth(irc, ev):
+    try:
+        ethereum = float(ev.args[0])
+    except IndexError or ValueError:
+        ethereum = 1.0
+    
+    coinPrice(irc, 'ethereum', ethereum)
+
 def prettify(thing):
     if thing > 0:
         return "\00303+" + str(thing) + "\003"
