@@ -63,6 +63,15 @@ def eth(irc, ev):
     
     coinPrice(irc, 'ethereum', ethereum)
 
+@commandHook(['mysterium', 'myst'])
+def eth(irc, ev):
+    try:
+        mysterium = float(ev.args[0])
+    except IndexError or ValueError:
+        mysterium = 1.0
+    
+    coinPrice(irc, 'mysterium', mysterium)
+
 def prettify(thing):
     if thing > 0:
         return "\00303+" + str(thing) + "\003"
