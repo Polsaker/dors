@@ -2,16 +2,6 @@
 from dors import commandHook
 
 
-@commandHook(['zero'])
-def zerokey(irc, ev):
-    irc.message(ev.replyto, "0")
-
-
-@commandHook(['one'])
-def onekey(irc, ev):
-    irc.message(ev.replyto, "1")
-
-
-@commandHook(['nine'])
-def ninekey(irc, ev):
-    irc.message(ev.replyto, "9")
+@commandHook(['keys', 'char'])
+def missingkeys(irc, ev):
+    irc.message(ev.replyto, "`1234567890-=<>~?!@#$%^&*()_+ abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ")
