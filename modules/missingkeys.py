@@ -1,4 +1,4 @@
-""" return a chracter that is broken on your keyboard """
+""" return a character that is broken on your keyboard """
 from dors import commandHook
 
 
