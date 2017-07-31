@@ -28,9 +28,8 @@ def seen(irc, ev):
 
     td = datetime.now() - datetime.fromtimestamp(int(last_seen[1])) 
     
-    weeks, remainder = divmod(td.seconds, 604800)
-    days, remainder = divmod(remainder, 86400)
-    hours, remainder = divmod(remainder, 3600)
+    weeks, days = divmod(td.days, 7)
+    hours, remainder = divmod(td.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     
     resp = "I saw \002{0}\002 last time ".format(target)
