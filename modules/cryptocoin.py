@@ -15,7 +15,7 @@ def bit(irc, ev):
         if 'k' in ev.args[0]:
             bits *= 1000
         bits = int(bits)
-    except IndexError or ValueError:
+    except (IndexError, ValueError):
         return irc.message(ev.replyto, "Usage: .bit <bits>")
     
     bitcoin = bits /1000000
@@ -29,45 +29,69 @@ def bit(irc, ev):
 
 @commandHook(['bitcoin', 'btc'])
 def btc(irc, ev):
+    tick = True
     try:
         bitcoin = float(ev.args[0])
-    except IndexError or ValueError:
-        bitcoin = 1.0
+    except (IndexError, ValueError):
+        if len(ev.args[0].strip()) == 34 and ev.args[0][0] == "1":
+            data = requests.get("http://btc.blockr.io/api/v1/address/info/" + ev.args[0]).json()
+            if not data['data']['is_valid']:
+                return irc.reply('Invalid address')
+            bitcoin = data['data']['balance']
+            tick = False
+        else:
+            bitcoin = 1.0
     
-    coinPrice(irc, 'bitcoin', bitcoin)
+    coinPrice(irc, 'bitcoin', bitcoin, tick)
 
 @commandHook(['litecoin', 'ltc'])
 def ltc(irc, ev):
+    tick = True
     try:
         bitcoin = float(ev.args[0])
-    except IndexError or ValueError:
-        bitcoin = 1.0
+    except (IndexError, ValueError):
+        if len(ev.args[0].strip()) == 34 and ev.args[0][0] == "L":
+            data = requests.get("http://ltc.blockr.io/api/v1/address/info/" + ev.args[0]).json()
+            if not data['data']['is_valid']:
+                return irc.reply('Invalid address')
+            bitcoin = data['data']['balance']
+            tick = False
+        else:
+            bitcoin = 1.0
     
-    coinPrice(irc, 'litecoin', bitcoin)
+    coinPrice(irc, 'litecoin', bitcoin, tick)
 
 @commandHook(['dogecoin', 'doge'])
 def doge(irc, ev):
+    tick = True
     try:
         dogecoin = float(ev.args[0])
-    except IndexError or ValueError:
-        dogecoin = 1000.0
+    except (IndexError, ValueError):
+        if len(ev.args[0].strip()) == 34 and ev.args[0][0] == "D":
+            data = requests.get("https://dogechain.info/api/v1/address/balance/" + ev.args[0]).json()
+            if data['success'] == 0:
+                return irc.reply(data['error'])
+            dogecoin = float(data['balance'])
+            tick = False
+        else:
+            dogecoin = 1000.0
 
-    coinPrice(irc, 'dogecoin', dogecoin)
+    coinPrice(irc, 'dogecoin', dogecoin, tick)
 
 @commandHook(['ethereum', 'eth'])
 def eth(irc, ev):
     try:
         ethereum = float(ev.args[0])
-    except IndexError or ValueError:
+    except (IndexError, ValueError):
         ethereum = 1.0
     
     coinPrice(irc, 'ethereum', ethereum)
 
 @commandHook(['mysterium', 'myst'])
-def eth(irc, ev):
+def myst(irc, ev):
     try:
         mysterium = float(ev.args[0])
-    except IndexError or ValueError:
+    except (IndexError, ValueError):
         mysterium = 1.0
     
     coinPrice(irc, 'mysterium', mysterium)
@@ -82,16 +106,16 @@ def prettify(thing):
 def coin(irc, ev):
     try:
         coin = ev.args[0]
-    except IndexError or ValueError:
+    except (IndexError, ValueError):
         coin = 'bitcoin'
     try:
         amount = float(ev.args[1])
-    except IndexError or ValueError:
+    except (IndexError, ValueError):
         amount = 1.0
 
     coinPrice(irc, coin, amount)
 
-def coinPrice(irc, coin, amount):
+def coinPrice(irc, coin, amount, tick=True):
     try:
         info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()[0]
     except:
@@ -100,8 +124,10 @@ def coinPrice(irc, coin, amount):
                 amount, info['symbol'], round(float(info['price_usd'])*amount,2))
     if coin != 'bitcoin':
         message += ", ฿\002{0}\002".format(round(float(info['price_btc'])*amount,8))
-    message += "  [hour: \002{0}\002%, day: \002{1}\002%, week: \002{2}\002%]".format(
-               prettify(float(info['percent_change_1h'])),
-               prettify(float(info['percent_change_24h'])),
-               prettify(float(info['percent_change_7d'])))
+    
+    if tick:
+        message += "  [hour: \002{0}\002%, day: \002{1}\002%, week: \002{2}\002%]".format(
+                   prettify(float(info['percent_change_1h'])),
+                   prettify(float(info['percent_change_24h'])),
+                   prettify(float(info['percent_change_7d'])))
     irc.reply(message + '.') 
