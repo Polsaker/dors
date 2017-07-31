@@ -33,7 +33,7 @@ def btc(irc, ev):
     try:
         bitcoin = float(ev.args[0])
     except (IndexError, ValueError):
-        if len(ev.args) > 0 and len(ev.args[0].strip()) == 34 and ev.args[0][0] == "1":
+        if len(ev.args) > 0 and len(ev.args[0]) <= 34 and len(ev.args[0]) >= 26 and ev.args[0][0] in ("1", "3"):
             data = requests.get("http://btc.blockr.io/api/v1/address/info/" + ev.args[0]).json()
             if not data['data']['is_valid']:
                 return irc.reply('Invalid address')
@@ -50,7 +50,7 @@ def ltc(irc, ev):
     try:
         bitcoin = float(ev.args[0])
     except (IndexError, ValueError):
-        if len(ev.args) > 0 and len(ev.args[0].strip()) == 34 and ev.args[0][0] == "L":
+        if len(ev.args) > 0 and len(ev.args[0]) <= 34 and len(ev.args[0]) >= 26 and ev.args[0][0] in ("L", "M", "3"):
             data = requests.get("http://ltc.blockr.io/api/v1/address/info/" + ev.args[0]).json()
             if not data['data']['is_valid']:
                 return irc.reply('Invalid address')
@@ -67,7 +67,7 @@ def doge(irc, ev):
     try:
         dogecoin = float(ev.args[0])
     except (IndexError, ValueError):
-        if len(ev.args) > 0 and len(ev.args[0].strip()) == 34 and ev.args[0][0] == "D":
+        if len(ev.args) > 0 and len(ev.args[0]) <= 34 and len(ev.args[0]) >= 26 and ev.args[0][0] in ("D", "9", "A"):
             data = requests.get("https://dogechain.info/api/v1/address/balance/" + ev.args[0]).json()
             if data['success'] == 0:
                 return irc.reply(data['error'])
