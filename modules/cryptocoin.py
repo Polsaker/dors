@@ -6,7 +6,8 @@ import math
 def bitfee(irc, ev):
     bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
     irc.message(ev.replyto, ev.source + ": Recommended fees (in satoshi/byte): \002Fastest\002: " + str(bitfee['fastestFee']) + ", \002half hour\002: " + str(bitfee['halfHourFee']) + ", \002hour\002: " + str(bitfee['hourFee']))
-
+    bitcoin = bitfee['fastestFee'] * 256 * 0.00000001
+    coinPrice(irc, 'bitcoin', bitcoin, False)
 
 @commandHook(['bit', 'bits'])
 def bit(irc, ev):
