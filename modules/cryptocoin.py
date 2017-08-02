@@ -9,6 +9,7 @@ def bitfee(irc, ev):
     bitcoin = bitfee['fastestFee'] * 256 * 0.00000001
     coinPrice(irc, 'bitcoin', bitcoin, False)
 
+
 @commandHook(['bit', 'bits'])
 def bit(irc, ev):
     try:
