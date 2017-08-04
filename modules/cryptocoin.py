@@ -4,10 +4,7 @@ import math
 
 @commandHook(['fees'])
 def bitfee(irc, ev):
-    bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
-    irc.message(ev.replyto, ev.source + ": Recommended fees (in satoshi/byte): \002Fastest\002: " + str(bitfee['fastestFee']) + ", \002half hour\002: " + str(bitfee['halfHourFee']) + ", \002hour\002: " + str(bitfee['hourFee']))
-    bitcoin = bitfee['fastestFee'] * 256 * 0.00000001
-    coinPrice(irc, 'bitcoin', bitcoin, False)
+    coinPrice(irc, 'bitcoin', 0, False, True)
 
 
 @commandHook(['bit', 'bits'])
@@ -117,12 +114,20 @@ def coin(irc, ev):
 
     coinPrice(irc, coin, amount)
 
-def coinPrice(irc, coin, amount, tick=True):
+def coinPrice(irc, coin, amount, tick=True, bitfee=False):
+    message = ""
+    if bitfee:
+        bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
+        message += "Recommended fees (in satoshi/byte): \002Fastest\002: {0}, \002half hour\002: {1}, \002hour\002: {2} | ".format(
+                    bitfee['fastestFee'],
+                    bitfee['halfHourFee'],
+                    bitfee['hourFee'])
+        amount = bitfee['fastestFee'] * 256 * 0.00000001
     try:
         info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()[0]
     except:
         return irc.reply("Coint not found")
-    message = "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
+    message += "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
                 amount, info['symbol'], round(float(info['price_usd'])*amount,2))
     if coin != 'bitcoin':
         message += ", ฿\002{0}\002".format(round(float(info['price_btc'])*amount,8))
