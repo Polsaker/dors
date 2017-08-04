@@ -102,7 +102,7 @@ def myst(irc, ev):
 
 
 @commandHook(['bitcoin-cash', '.bch'])
-def myst(irc, ev):
+def bch(irc, ev):
     try:
         bch = float(ev.args[0])
     except (IndexError, ValueError):
