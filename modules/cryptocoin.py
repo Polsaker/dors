@@ -101,6 +101,16 @@ def myst(irc, ev):
     coinPrice(irc, 'mysterium', mysterium)
 
 
+@commandHook(['bitcoin-cash', '.bch'])
+def myst(irc, ev):
+    try:
+        bch = float(ev.args[0])
+    except (IndexError, ValueError):
+        bch = 1.0
+    
+    coinPrice(irc, 'bitcoin-cash', bch)
+
+
 def prettify(thing):
     if thing > 0:
         return "\00303+" + str(thing) + "\003"
@@ -127,7 +137,7 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
     try:
         info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()[0]
     except:
-        return irc.reply("Coint not found")
+        return irc.reply("Coin not found")
     if bitfee:
         bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
         fee0 = round(bitfee['fastestFee'] * 256 * 0.01,1)
