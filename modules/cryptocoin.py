@@ -101,7 +101,7 @@ def myst(irc, ev):
     coinPrice(irc, 'mysterium', mysterium)
 
 
-@commandHook(['bitcoin-cash', '.bch'])
+@commandHook(['bitcoin-cash', 'bch'])
 def bch(irc, ev):
     try:
         bch = float(ev.args[0])
