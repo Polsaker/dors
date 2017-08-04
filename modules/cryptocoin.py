@@ -2,9 +2,10 @@ from dors import commandHook
 import requests
 import math
 
+
 @commandHook(['fees'])
 def bitfee(irc, ev):
-    coinPrice(irc, 'bitcoin', 0, False, True)
+    coinPrice(irc, 'bitcoin', 1, False, True)
 
 
 @commandHook(['bit', 'bits'])
@@ -43,6 +44,7 @@ def btc(irc, ev):
     
     coinPrice(irc, 'bitcoin', bitcoin, tick)
 
+
 @commandHook(['litecoin', 'ltc'])
 def ltc(irc, ev):
     tick = True
@@ -59,6 +61,7 @@ def ltc(irc, ev):
             bitcoin = 1.0
     
     coinPrice(irc, 'litecoin', bitcoin, tick)
+
 
 @commandHook(['dogecoin', 'doge'])
 def doge(irc, ev):
@@ -77,6 +80,7 @@ def doge(irc, ev):
 
     coinPrice(irc, 'dogecoin', dogecoin, tick)
 
+
 @commandHook(['ethereum', 'eth'])
 def eth(irc, ev):
     try:
@@ -85,6 +89,7 @@ def eth(irc, ev):
         ethereum = 1.0
     
     coinPrice(irc, 'ethereum', ethereum)
+
 
 @commandHook(['mysterium', 'myst'])
 def myst(irc, ev):
@@ -95,11 +100,13 @@ def myst(irc, ev):
     
     coinPrice(irc, 'mysterium', mysterium)
 
+
 def prettify(thing):
     if thing > 0:
         return "\00303+" + str(thing) + "\003"
     elif thing < 0:
         return "\00304" + str(thing) + "\003"
+
 
 @commandHook(['coin'])
 def coin(irc, ev):
@@ -114,24 +121,28 @@ def coin(irc, ev):
 
     coinPrice(irc, coin, amount)
 
+
 def coinPrice(irc, coin, amount, tick=True, bitfee=False):
     message = ""
-    if bitfee:
-        bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
-        message += "Recommended fees (in satoshi/byte): \002Fastest\002: {0}, \002half hour\002: {1}, \002hour\002: {2} | ".format(
-                    bitfee['fastestFee'],
-                    bitfee['halfHourFee'],
-                    bitfee['hourFee'])
-        amount = bitfee['fastestFee'] * 256 * 0.00000001
     try:
         info = requests.get("https://api.coinmarketcap.com/v1/ticker/" + coin + "/").json()[0]
     except:
         return irc.reply("Coint not found")
-    message += "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
-                amount, info['symbol'], round(float(info['price_usd'])*amount,2))
+    if bitfee:
+        bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
+        fee0 = round(bitfee['fastestFee'] * 256 * 0.01,1)
+        fee0USD = round(float(info['price_usd']) * (fee0 / 1000000),2)
+        fee1 = round(bitfee['halfHourFee'] * 256 * 0.01,1)
+        fee1USD = round(float(info['price_usd']) * (fee1 / 1000000),2)
+        fee2 = round(bitfee['hourFee'] * 256 * 0.01,1)
+        fee2USD = round(float(info['price_usd']) * (fee2 / 1000000),2)
+        message += "Recommended fees in bits: \002Fastest\002: {0}(${1}), \002half hour\002: {2}(${3}), \002hour\002: {4}(${5})".format(
+                   fee0, fee0USD, fee1, fee1USD, fee2, fee2USD)
+    else:
+        message += "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
+                    amount, info['symbol'], round(float(info['price_usd'])*amount,2))
     if coin != 'bitcoin':
         message += ", ฿\002{0}\002".format(round(float(info['price_btc'])*amount,8))
-    
     if tick:
         message += "  [hour: \002{0}\002%, day: \002{1}\002%, week: \002{2}\002%]".format(
                    prettify(float(info['percent_change_1h'])),
