@@ -136,7 +136,7 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
         fee1USD = round(float(info['price_usd']) * (fee1 / 1000000),2)
         fee2 = round(bitfee['hourFee'] * 256 * 0.01,1)
         fee2USD = round(float(info['price_usd']) * (fee2 / 1000000),2)
-        message += "Recommended fees in bits: \002Fastest\002: {0}(${1}), \002half hour\002: {2}(${3}), \002hour\002: {4}(${5})".format(
+        message += "Recommended fees in bits: \002Fastest\002: {0} (${1}), \002half hour\002: {2} (${3}), \002hour\002: {4} (${5})".format(
                    fee0, fee0USD, fee1, fee1USD, fee2, fee2USD)
     else:
         message += "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
