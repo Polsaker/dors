@@ -159,3 +159,35 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
                    prettify(float(info['percent_change_24h'])),
                    prettify(float(info['percent_change_7d'])))
     irc.reply(message + '.') 
+
+
+@commandHook(['ticker'])
+def coin(irc, ev):
+    try:
+        coin = ev.args[0]
+    except (IndexError, ValueError):
+        coin = 'BTC'
+    try:
+        amount = float(ev.args[1])
+    except (IndexError, ValueError):
+        amount = 1.0
+    if coin.upper() == "DOGE":
+        if amount == 1.0:
+            amount = 1000.0
+
+    tickerPrice(irc, coin.upper(), amount)
+
+
+def tickerPrice(irc, coin, amount):
+    message = ""
+    try:
+        info = requests.get("https://min-api.cryptocompare.com/data/price?fsym=" + coin + "&tsyms=BTC,USD,GBP,EUR,AUD").json()
+    except:
+        return irc.reply("Coin not found")
+    # docs https://www.cryptocompare.com/api
+    USD = round(float(info['USD'])*amount,2)
+    GBP = round(float(info['GBP'])*amount,2)
+    EUR = round(float(info['EUR'])*amount,2)
+    AUD = round(float(info['AUD'])*amount,2)
+    message += "\002{0}\002 \002{1}\002 => $\002{2}\002, £\002{3}\002, €\002{4}\002, $\002{5}\002AUD".format(amount, coin, USD, GBP, EUR, AUD)
+    irc.reply(message + '.')
