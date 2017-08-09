@@ -189,5 +189,6 @@ def tickerPrice(irc, coin, amount):
     GBP = round(float(info['GBP'])*amount,2)
     EUR = round(float(info['EUR'])*amount,2)
     AUD = round(float(info['AUD'])*amount,2)
-    message += "\002{0}\002 \002{1}\002 => $\002{2}\002, £\002{3}\002, €\002{4}\002, $\002{5}\002AUD".format(amount, coin, USD, GBP, EUR, AUD)
+    ARS = round(float(info['ARS'])*amount,2)
+    message += "\002{0}\002 \002{1}\002 => $\002{2}\002, £\002{3}\002, €\002{4}\002, $\002{5}\002AUD, $\002{6}\002ARS".format(amount, coin, USD, GBP, EUR, AUD, ARS)
     irc.reply(message + '.')
