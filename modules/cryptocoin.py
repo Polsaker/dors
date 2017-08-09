@@ -181,7 +181,7 @@ def coin(irc, ev):
 def tickerPrice(irc, coin, amount):
     message = ""
     try:
-        info = requests.get("https://min-api.cryptocompare.com/data/price?fsym=" + coin + "&tsyms=BTC,USD,GBP,EUR,AUD").json()
+        info = requests.get("https://min-api.cryptocompare.com/data/price?fsym=" + coin + "&tsyms=BTC,USD,GBP,EUR,AUD,ARS").json()
     except:
         return irc.reply("Coin not found")
     # docs https://www.cryptocompare.com/api
