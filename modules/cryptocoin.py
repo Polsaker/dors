@@ -138,11 +138,9 @@ def prettify(thing):
 @commandHook(['coin'])
 def coin(irc, ev):
     try:
-        coin = coinmap[ev.args[0].lower()]
+        coin = coinmap.get(ev.args[0].lower(), ev.args[0])
     except (IndexError, ValueError):
         coin = 'bitcoin'
-    except (KeyError):
-        coin = ev.args[0]
     try:
         amount = float(ev.args[1])
     except (IndexError, ValueError):
