@@ -17,7 +17,7 @@ coinmap = {'btc':'bitcoin', 'ltc':'litecoin', 'drk':'darkcoin', 'doge':'dogecoin
     'max':'maxcoin', 'rdd':'reddcoin', 'red':'reddcoin', 'myr':'myriad',
     'cach':'cachecoin',  'huc':'huntercoin', 'grc':'gridcoin', 'ttc':'tittiecoin',
     'blk':'blackcoin', 'bc':'blackcoin', 'zeit':'zeitcoin', 'pot':'potcoin',
-    'rby':'rubycoin'}
+    'rby':'rubycoin', 'omg':'omisego'}
 
 
 @commandHook(['fees'])
