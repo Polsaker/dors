@@ -162,7 +162,7 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
 
 
 @commandHook(['ticker'])
-def coin(irc, ev):
+def ticker(irc, ev):
     try:
         coin = ev.args[0]
     except (IndexError, ValueError):
