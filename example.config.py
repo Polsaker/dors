@@ -24,7 +24,7 @@ logchannel = "#jenni"
 disabled_modules = ['chat', 'wolframalpha', 'rss']
 
 # If whitelistonly, only these modules will load
-whitelistonly_modules = ['admin', 'cryptocoin']
+whitelistonly_modules = ['admin', 'reloader']
 
 # URLs we won't give titles for (for the title module)
 urlblacklist = ['git.io', 'bpaste.net', 'bitbucket.org']
