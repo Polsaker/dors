@@ -23,7 +23,8 @@ logchannel = "#jenni"
 # Modules we will NOT load
 disabled_modules = ['chat', 'wolframalpha', 'rss']
 
-# If whitelistonly, only these modules will load
+# If whitelistonly, if you list modules here, then only these modules will load and all others will be excluded
+# ['admin', 'reloader'] will load only the 'admin.py' and 'reloader.py' modules
 whitelistonly_modules = ['admin', 'reloader']
 
 # URLs we won't give titles for (for the title module)
