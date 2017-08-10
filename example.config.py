@@ -25,7 +25,7 @@ disabled_modules = ['chat', 'wolframalpha', 'rss']
 
 # If whitelistonly, if you list modules here, then only these modules will load and all others will be excluded
 # ['admin', 'reloader'] will load only the 'admin.py' and 'reloader.py' modules
-whitelistonly_modules = ['admin', 'reloader']
+whitelistonly_modules = []
 
 # URLs we won't give titles for (for the title module)
 urlblacklist = ['git.io', 'bpaste.net', 'bitbucket.org']
