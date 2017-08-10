@@ -23,6 +23,9 @@ logchannel = "#jenni"
 # Modules we will NOT load
 disabled_modules = ['chat', 'wolframalpha', 'rss']
 
+# If whitelistonly, only that module will load
+whitelistonly_modules = []
+
 # URLs we won't give titles for (for the title module)
 urlblacklist = ['git.io', 'bpaste.net', 'bitbucket.org']
 
