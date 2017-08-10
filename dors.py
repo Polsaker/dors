@@ -56,9 +56,14 @@ class Dors(Waifu):
             if module == '__init__.py' or module[-3:] != '.py':
                 continue
             module = module[:-3]
-            if module in config.disabled_modules:
-                continue
-            self.loadModule(module)
+            if module in config.whitelistonly_modules:
+                for module in config.whitelistonly_modules:
+                    self.loadModule(module)
+                break
+            else:
+                if module in config.disabled_modules:
+                    continue
+                self.loadModule(module)
             
     
     def loadModule(self, module):
