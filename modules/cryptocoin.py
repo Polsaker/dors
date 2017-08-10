@@ -172,7 +172,9 @@ def ticker(irc, ev):
     except (IndexError, ValueError):
         amount = 1.0
     if coin.upper() == "DOGE":
-        if amount == 1.0:
+        try:
+            amount = float(ev.args[1])
+        except (IndexError, ValueError):
             amount = 1000.0
 
     tickerPrice(irc, coin.upper(), amount)
