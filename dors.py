@@ -198,7 +198,7 @@ class Dors(Waifu):
     
 if __name__ == '__main__':
     client = Dors(config.nick, sasl_username=config.user, sasl_password=config.password)
-
+    client.throttling = True
     client.connect(config.server, config.port, tls=config.tls)
     client.handle_forever()
 
