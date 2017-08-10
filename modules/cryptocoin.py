@@ -3,6 +3,23 @@ import requests
 import math
 
 
+coinmap = {'btc':'bitcoin', 'ltc':'litecoin', 'drk':'darkcoin', 'doge':'dogecoin',
+    'eth':'ethereum', 'myst':'mysterium', 'nxt':'nxt', 'ppc':'peercoin',
+    'ifc':'infinitecoin', 'qrk':'quarkcoin', 'moon':'mooncoin', 'aur':'auroracoin',
+    'vtc':'vertcoin', 'wdc':'worldcoin', 'nvc':'novacoin', 'ftc':'feathercoin',
+    'zet':'zetacoin', 'uno':'unobtanium', 'tips':'fedoracoin', 'clam':'clams',
+    'mint':'mintcoin', 'ixc':'ixcoin', 'dmd':'diamond', 'dgc':'digitalcoin',
+    'sxc':'sexcoin', 'btb':'bitbar', 'ccn':'cannacoin', 'trc':'terracoin',
+    'mzc':'mazacoin', 'net':'netcoin', 'cnc':'chncoin', 'anc':'anoncoin',
+    'hbn':'hobonickels', 'nmc':'namecoin', 'emd':'emerald', 'fst':'fastcoin',
+    'glc':'globalcoin', 'xpm':'primecoin', 'gld':'goldcoin', 'sc':'silkcoin',
+    'src':'securecoin', '42':'42-coin', 'xrp':'ripple', 'dgb':'digibyte',
+    'max':'maxcoin', 'rdd':'reddcoin', 'red':'reddcoin', 'myr':'myriad',
+    'cach':'cachecoin',  'huc':'huntercoin', 'grc':'gridcoin', 'ttc':'tittiecoin',
+    'blk':'blackcoin', 'bc':'blackcoin', 'zeit':'zeitcoin', 'pot':'potcoin',
+    'rby':'rubycoin', 'omg':'omisego'}
+
+
 @commandHook(['fees'])
 def bitfee(irc, ev):
     coinPrice(irc, 'bitcoin', 1, False, True)
@@ -121,7 +138,7 @@ def prettify(thing):
 @commandHook(['coin'])
 def coin(irc, ev):
     try:
-        coin = ev.args[0]
+        coin = coinmap.get(ev.args[0].lower(), ev.args[0])
     except (IndexError, ValueError):
         coin = 'bitcoin'
     try:
