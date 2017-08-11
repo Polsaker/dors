@@ -25,7 +25,6 @@ def priceConvert(irc, amount, coinin, coinout):
     info = requests.get("https://min-api.cryptocompare.com/data/price?fsym=" + coinin + "&tsyms=" + coinout).json()
     if 'Error' in str(info):
         return irc.reply(info['Message'])
-    info = info[coinout]
-    info = round(float(info)*amount,8)
+    info = round(float(info[coinout])*amount,8)
     message += "\002{0}\002 \002{1}\002 => \002{2}\002 \002{3}\002".format(amount, coinin, info, coinout)
     irc.reply(message + '.')
