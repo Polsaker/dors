@@ -169,7 +169,7 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
         message += "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
                     amount, info['symbol'], round(float(info['price_usd'])*amount,2))
     if coin != 'bitcoin':
-        message += ", ฿\002{0}\002".format(round(float(info['price_btc'])*amount,8))
+        message += ", ฿\002{0:.8f}\002".format(round(float(info['price_btc'])*amount,8))
     if tick:
         message += "  [hour: \002{0}\002%, day: \002{1}\002%, week: \002{2}\002%]".format(
                    prettify(float(info['percent_change_1h'])),
