@@ -26,5 +26,5 @@ def priceConvert(irc, amount, coinin, coinout):
     if 'Error' in str(info):
         return irc.reply(info['Message'])
     info = round(float(info[coinout])*amount,8)
-    message += "\002{0}\002 \002{1}\002 => \002{2}\002 \002{3}\002".format(amount, coinin, info, coinout)
+    message += "\002{0}\002 \002{1}\002 => \002{2:.8f}\002 \002{3}\002".format(amount, coinin, info, coinout)
     irc.reply(message + '.')
