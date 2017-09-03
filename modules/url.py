@@ -3,6 +3,9 @@ import config
 import re
 import urllib.request, urllib.error, urllib.parse
 import time
+from bs4 import BeautifulSoup
+import requests
+
 
 url_finder = re.compile('(?iu)(\!?(http|https|ftp)(://\S+\.?\S+/?\S+?))')
 r_entity = re.compile(r'&[A-Za-z0-9#]+;')
@@ -66,7 +69,13 @@ def find_title(url, irc):
         appid = re.search('.*store.steampowered.com/app/(\d+).*', url)
         return True, irc.plugins['steam'].getAppInfo(appid.group(1), False)
 
-       
+    if 'twitter.com' in url:
+        r = requests.get(url)
+        html_content = r.text
+        soup = BeautifulSoup(html_content, 'lxml')
+        return True, "{0}".format(soup.title.string)
+
+
     #url = url.decode()
     msg = str()
     k = 0
