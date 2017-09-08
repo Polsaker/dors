@@ -72,7 +72,9 @@ def find_title(url, irc):
     if 'twitter.com' in url:
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'lxml')
-        return True, "{0}".format(soup.title.string)
+        title = str(soup.title.string)
+        title = title.replace('\n', ' ').replace('\r', '')
+        return True, "{0}".format(title)
 
 
     #url = url.decode()
