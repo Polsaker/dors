@@ -17,7 +17,7 @@ coinmap = {'btc':'bitcoin', 'ltc':'litecoin', 'drk':'darkcoin', 'doge':'dogecoin
     'max':'maxcoin', 'rdd':'reddcoin', 'red':'reddcoin', 'myr':'myriad',
     'cach':'cachecoin',  'huc':'huntercoin', 'grc':'gridcoin', 'ttc':'tittiecoin',
     'blk':'blackcoin', 'bc':'blackcoin', 'zeit':'zeitcoin', 'pot':'potcoin',
-    'rby':'rubycoin', 'omg':'omisego'}
+    'rby':'rubycoin', 'omg':'omisego', 'xmr':'monero'}
 
 
 @commandHook(['fees'])
@@ -96,6 +96,16 @@ def doge(irc, ev):
             dogecoin = 1000.0
 
     coinPrice(irc, 'dogecoin', dogecoin, tick)
+
+
+@commandHook(['monero', 'xmr'])
+def xmr(irc, ev):
+    try:
+        monero = float(ev.args[0])
+    except (IndexError, ValueError):
+        monero = 1.0
+
+    coinPrice(irc, 'monero', monero)
 
 
 @commandHook(['ethereum', 'eth'])
