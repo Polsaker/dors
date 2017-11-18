@@ -1,7 +1,6 @@
 from dors import commandHook
 import requests
 import math
-from bs4 import BeautifulSoup
 
 
 coinmap = {'btc':'bitcoin', 'ltc':'litecoin', 'drk':'darkcoin', 'doge':'dogecoin',
@@ -168,10 +167,8 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
         return irc.reply("Coin not found")
     if bitfee:
         bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
-        tx = requests.get('https://blockchain.info/unconfirmed-transactions')
-        soup = BeautifulSoup(tx.text, 'lxml')
-        txs = str(soup.title.string)
-        txs = txs.replace('\n', ' ').replace('\r', '').replace('"', '')
+        txs = requests.get('https://blockchain.info/q/unconfirmedcount')
+        txs = str(txs.content).replace('b', '').replace('\'', '')
         fee0 = round(bitfee['fastestFee'] * 256 * 0.01,1)
         fee0USD = round(float(info['price_usd']) * (fee0 / 1000000),2)
         fee1 = round(bitfee['halfHourFee'] * 256 * 0.01,1)
