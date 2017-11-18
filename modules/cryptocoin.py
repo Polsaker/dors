@@ -1,6 +1,7 @@
 from dors import commandHook
 import requests
 import math
+from bs4 import BeautifulSoup
 
 
 coinmap = {'btc':'bitcoin', 'ltc':'litecoin', 'drk':'darkcoin', 'doge':'dogecoin',
@@ -167,14 +168,18 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
         return irc.reply("Coin not found")
     if bitfee:
         bitfee = requests.get("https://bitcoinfees.21.co/api/v1/fees/recommended").json()
+        tx = requests.get('https://blockchain.info/unconfirmed-transactions')
+        soup = BeautifulSoup(tx.text, 'lxml')
+        txs = str(soup.title.string)
+        txs = txs.replace('\n', ' ').replace('\r', '').replace('"', '')
         fee0 = round(bitfee['fastestFee'] * 256 * 0.01,1)
         fee0USD = round(float(info['price_usd']) * (fee0 / 1000000),2)
         fee1 = round(bitfee['halfHourFee'] * 256 * 0.01,1)
         fee1USD = round(float(info['price_usd']) * (fee1 / 1000000),2)
         fee2 = round(bitfee['hourFee'] * 256 * 0.01,1)
         fee2USD = round(float(info['price_usd']) * (fee2 / 1000000),2)
-        message += "Recommended fees in bits: \002Fastest\002: {0} (${1}), \002half hour\002: {2} (${3}), \002hour\002: {4} (${5})".format(
-                   fee0, fee0USD, fee1, fee1USD, fee2, fee2USD)
+        message += "Recommended fees in bits: \002Fastest\002: {0} (${1}), \002half hour\002: {2} (${3}), \002hour\002: {4} (${5}). {6}".format(
+                   fee0, fee0USD, fee1, fee1USD, fee2, fee2USD, txs)
     else:
         message += "\002{0}\002 \002{1}\002 => $\002{2}\002".format(
                     amount, info['symbol'], round(float(info['price_usd'])*amount,2))
