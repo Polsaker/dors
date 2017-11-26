@@ -20,6 +20,11 @@ coinmap = {'btc':'bitcoin', 'ltc':'litecoin', 'drk':'darkcoin', 'doge':'dogecoin
     'rby':'rubycoin', 'omg':'omisego', 'xmr':'monero'}
 
 
+resultsym = {'USD':'$', 'EUR':'€', 'GBP':'£', 'AUD':'A$', 'CAD':'C$',
+             'ARS':'A$', 'NZD':'$', 'JPY':'¥', 'KPW':'₩', 'KRW':'₩', 'ILS':'₪',
+             'BTC':'฿', 'LTC':'Ł', 'DOGE':'Ð', 'ETH':'Ξ'}
+
+
 @commandHook(['fees'])
 def bitfee(irc, ev):
     coinPrice(irc, 'bitcoin', 1, False, True)
@@ -188,3 +193,68 @@ def coinPrice(irc, coin, amount, tick=True, bitfee=False):
                    prettify(float(info['percent_change_24h'])),
                    prettify(float(info['percent_change_7d'])))
     irc.reply(message + '.') 
+
+
+@commandHook(['coins'], help='.coins <convertTo:optional> -- get coin price and daily/weekly percent change.')
+def coins(irc, ev):
+    msg = ''
+    coins = ['BTC','LTC','ETH','BCH','DOGE','XMR','OMG', 'MYST'] # show info for these ticker symbols
+    try:
+        convert = ev.args[0].upper()
+    except (IndexError, ValueError):
+        convert = 'USD' # default fiat or crypto ticker symbol
+    i = requests.get('https://api.coinmarketcap.com/v1/ticker/?convert=' + convert + '&limit=250').json() # market cap sorted by top
+    try:
+        a = i[0]['price_' + convert.lower()]
+    except (KeyError, ValueError):
+        msg = 'No info found for {0}.'.format(ev.args[0])
+        irc.message(ev.replyto, msg)
+        return
+    if convert != 'USD':
+        msg += '(\002{0}\002) ● '.format(convert)
+    for c in i:
+        if c['symbol'] in coins:
+            volume = ''
+            price = c['price_' + convert.lower()]
+            try:
+                sym = resultsym.get(convert, '')
+            except (IndexError, ValueError):
+                sym = ''
+            if c['symbol'] == 'DOGE':
+                price = round(float(float(price * 1) * 1000), 2)
+                volume = '(1000x)'
+            msg += '\002{0}\002{1}: {2}{3} ({4}%|{5}%) ● '.format(
+                   c['symbol'], volume, sym, price,
+                   prettify(float(c['percent_change_24h'])),
+                   prettify(float(c['percent_change_7d'])))
+    msg += '<<coin: $price (day%|week%)>>'
+    irc.message(ev.replyto, msg)
+
+
+@commandHook(['coins2'], help='.coins2 <convertTo:optional> -- get coin prices and convert to fiat or cryptos.')
+def coins2(irc, ev):
+    msg = ''
+    coins = 'BTC,BCH,LTC,DOGE,ETH,XMR,MYST,OMG' # get info for these ticker symbols
+    try:
+        convert = ev.args[0].upper()
+    except (IndexError, ValueError):
+        convert = 'USD' # default fiat or crypto ticker symbol
+    i = requests.get('https://min-api.cryptocompare.com/data/pricemulti?fsyms=' + coins + '&tsyms=' + convert).json()
+    if 'Error' in str(i):
+        irc.message(ev.replyto, i['Message'])
+        return
+    if convert != 'USD':
+        msg += '(\002{0}\002) ● '.format(convert)
+    for c in i.items():
+        coin = c[0]
+        volume = ''
+        try:
+            sym = resultsym.get(convert, '')
+        except (IndexError, ValueError):
+            sym = ''
+        price = c[1][convert]
+        if coin == 'DOGE':
+            volume = '(1000x)'
+            price = round(float(price * 1000), 2)
+        msg += '\002{0}\002{1}: {2}{3} ● '.format(coin, volume, sym, price)
+    irc.message(ev.replyto, msg[:-3])
