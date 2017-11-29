@@ -56,10 +56,8 @@ def btc(irc, ev):
         bitcoin = float(ev.args[0])
     except (IndexError, ValueError):
         if len(ev.args) > 0 and len(ev.args[0]) <= 34 and len(ev.args[0]) >= 26 and ev.args[0][0] in ("1", "3"):
-            data = requests.get("http://btc.blockr.io/api/v1/address/info/" + ev.args[0]).json()
-            if not data['data']['is_valid']:
-                return irc.reply('Invalid address')
-            bitcoin = data['data']['balance']
+            data = requests.get("https://blockchain.info/es/rawaddr/" + ev.args[0]).json()
+            bitcoin = float(data['final_balance']/1000000000)
             tick = False
         else:
             bitcoin = 1.0
