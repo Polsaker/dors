@@ -130,6 +130,16 @@ def myst(irc, ev):
     
     coinPrice(irc, 'mysterium', mysterium)
 
+    
+@commandHook(['omisego', 'omg'])
+def omg(irc, ev):
+    try:
+        omg = float(ev.args[0])
+    except (IndexError, ValueError):
+        omg = 1.0
+    
+    coinPrice(irc, 'omisego', omg)
+
 
 @commandHook(['bitcoin-cash', 'bch'])
 def bch(irc, ev):
