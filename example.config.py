@@ -38,3 +38,6 @@ google_apikey = "PutItHere"
 
 # Darksky.net API key (for weather module)
 darksky_apikey = "WewLads"
+
+#Monero address for supportxmr pool check
+XMRaddress = "PutItHere"
