@@ -54,7 +54,7 @@ def pretty_date(time=False):
     return str(day_diff / 365) + " years ago"
 
 
-@commandHook(['mine', 'miner'])
+@commandHook(['mine', 'miner', 'mining'])
 def miningstats(irc, ev):
     mine = requests.get("https://phuks.co/miner/stats").json()
     info = requests.get("https://api.coinmarketcap.com/v1/ticker/monero/").json()[0]
