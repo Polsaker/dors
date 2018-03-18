@@ -12,28 +12,6 @@ r_entity = re.compile(r'&[A-Za-z0-9#]+;')
 HTML_ENTITIES = { 'apos': "'" }
 
 
-def get_page_backup(url):
-    # fix url
-    k = urllib.parse.urlparse(url)
-    url = k.geturl()
-
-    req = urllib.request.Request(url, headers={'Accept':'*/*'})
-    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0')
-    u = urllib.request.urlopen(req)
-    contents = u.read()
-    out = dict()
-    try:
-        con = (contents).decode('utf-8')
-    except:
-        con = (contents).decode('iso-8859-1')
-    out['code'] = u.code
-    out['read'] = con
-    out['geturl'] = u.geturl()
-    out['headers'] = dict(u.headers)
-    out['url'] = u.url
-    return out['code'], out
-
-
 def remove_nonprint(text):
     new = str()
     for char in text:
@@ -79,6 +57,8 @@ def find_title(url, irc):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'lxml')
     title = str(soup.title.string)
+    if len(title) > 200:		
+        title = title[:200] + '...'
     return True, "{0}".format(title)
 
 
