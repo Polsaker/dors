@@ -61,7 +61,7 @@ def find_title(url, irc):
 
     def remove_spaces(x):
         if '  ' in x:
-            x = x.replace('  ', ' ')
+            x = x.replace('  ', '')
             return remove_spaces(x)
         else:
             return x
