@@ -57,7 +57,18 @@ def find_title(url, irc):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'lxml')
     title = str(soup.title.string)
-    if len(title) > 200:		
+    title = title.replace('\n', '').replace('\r', '')
+
+    def remove_spaces(x):
+        if '  ' in x:
+            x = x.replace('  ', ' ')
+            return remove_spaces(x)
+        else:
+            return x
+
+    title = remove_spaces(title)
+
+    if len(title) > 200:
         title = title[:200] + '...'
     return True, "{0}".format(title)
 
