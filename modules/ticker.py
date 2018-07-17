@@ -47,6 +47,7 @@ def tickerPrice(irc, coin, amount):
         threemonth = float(history['Data'][277]['close'])
         sixmonth = float(history['Data'][187]['close'])
         oneyear = float(history['Data'][1]['close'])
+        oy_perc = round(float((USDbase - oneyear) / oneyear)*100,2) if oneyear != 0 else "inf"
         message += " [1d: \002{0}\002%, 7d: \002{1}\002%, 14d: \002{2}\002%, 21d: \002{3}\002%, 28d: \002{4}\002%, 3m: \002{5}\002%, 6m: \002{6}\002%, 1y: \002{7}\002%]".format(
                     round(float((USDbase - yesterday) / yesterday)*100,2),
                     round(float((USDbase - lastweek) / lastweek)*100,2),
@@ -54,6 +55,6 @@ def tickerPrice(irc, coin, amount):
                     round(float((USDbase - threeweeks) / threeweeks)*100,2),
                     round(float((USDbase - lastmonth) / lastmonth)*100,2),
                     round(float((USDbase - threemonth) / threemonth)*100,2),
-                    round(float((USDbase - sixmonth) / sixmonth)*100,2),
-                    round(float((USDbase - oneyear) / oneyear)*100,2))
+                    round(float((USDbase - sixmonth) / sixmonth)*100,2), oy_perc
+)
     irc.reply(message + '.')
