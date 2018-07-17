@@ -42,6 +42,9 @@ def find_title(url, irc):
     if 'zerobin.net' in url:
         return True, 'ZeroBin'
 
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0',
+               'Accept': '*/*'}
+
     if 'store.steampowered.com/app' in url and 'steam' in irc.plugins:
         appid = re.search('.*store.steampowered.com/app/(\d+).*', url)
         return True, irc.plugins['steam'].getAppInfo(appid.group(1), False)
@@ -54,7 +57,7 @@ def find_title(url, irc):
         title = title.replace('"', '')
         return True, "{0}".format(title)
 
-    r = requests.get(url)
+    r = requests.get(url, headers=headers)
     soup = BeautifulSoup(r.text, 'lxml')
     title = str(soup.title.string)
     title = title.replace('\n', '').replace('\r', '')
